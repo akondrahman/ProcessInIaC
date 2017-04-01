@@ -194,6 +194,24 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
         minorList.append(author)
    return len(minorList)
 
+
+
+
+def getHighestContribsPerc(param_file_path, repo_path, sloc):
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   blameCommand      = " git blame " + theFile + "  | awk '{print $2}'  | cut -d'(' -f2"
+   command2Run       = cdCommand + blameCommand
+
+   blame_output     = subprocess.check_output(['bash','-c', command2Run])
+   blame_output     = blame_output.split('\n')
+   blame_output     = [x_ for x_ in blame_output if x_!='']
+   author_contrib   = dict(Counter(blame_output))
+   highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
+   highest_contr    = author_contrib[highest_author]
+   print "A:{}, C:{}, dict:{}".format(highest_author, highest_contr, author_contrib)
+   return (round(float(highest_contr)/float(sloc), 5))*100
+
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
