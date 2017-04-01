@@ -127,6 +127,24 @@ def getAddedChurnMetrics(param_file_path, repo_path):
 
 
 
+def getDeletedChurnMetrics(param_file_path, repo_path):
+   totalDeletedLinesForChurn = 0
+
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   churnDeletedCommand = " hg churn --diffstat " + theFile + " | awk '{print $2}' | cut -d'/' -f2 | cut -d'-' -f2 | sed -e  's/ /,/g'"
+   command2Run = cdCommand + churnDeletedCommand
+
+   del_churn_output = subprocess.check_output(['bash','-c', command2Run])
+   del_churn_output = del_churn_output.split('\n')
+   del_churn_output = [x_ for x_ in del_churn_output if x_!='']
+   del_churn_output = [int(y_) for y_ in del_churn_output]
+   #print del_churn_output
+   totalDeletedLinesForChurn = sum(del_churn_output)
+   #print totalDeletedLinesForChurn
+   return totalDeletedLinesForChurn
+
+
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
@@ -142,7 +160,12 @@ def getProcessMetrics(file_path_p, repo_path_p):
     LOC            = sum(1 for line in open(file_path_p))
     ##Addition Per LOC
     ADDPERLOC      = round(float(ADDTOTALLINES)/float(LOC), 5)
+    #get total lines deleted
+    DELETETOTALLINES  = getDeletedChurnMetrics(file_path_p, repo_path_p)
+    ##Deletion Per LOC
+    DELPERLOC      = round(float(DELETETOTALLINES)/float(LOC), 5)
 
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
+    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ','
     return all_process_metrics
