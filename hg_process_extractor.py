@@ -55,17 +55,37 @@ def getAge(param_file_path, repo_path):
    monthAndYeatList = [x_ for x_ in dt_churn_output if x_!='']
    #print monthAndYeatList
    monthAndYeatList.sort()
-   print monthAndYeatList
+   #print monthAndYeatList
    earliesttMonth  = monthAndYeatList[0]
    latesttMonth    = monthAndYeatList[-1]
    age = str(calculateMonthDiffFromTwoDates(earliesttMonth, latesttMonth))
-   print age
+   #print age
    return age
 
+def getUniqueDevCount(param_file_path, repo_path):
 
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   #print "full path: {}, repo path:{}, theFile:{}".format(param_file_path, repo_path, theFile)
+   commitCountCmd    = "hg churn --diffstat  " + theFile + " | awk '{print $1}'  "
+   command2Run = cdCommand + commitCountCmd
+
+   commit_count_output = subprocess.check_output(['bash','-c', command2Run])
+   author_count_output = commit_count_output.split('\n')
+   author_count_output = [x_ for x_ in author_count_output if x_!='']
+   author_count        = len(np.unique(author_count_output))
+   #print author_count
+   return author_count
 
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
     #get AGE
     AGE = getAge(file_path_p, repo_path_p)
+    #get DEV
+    DEV = getUniqueDevCount(file_path_p, repo_path_p)
+
+
+    ## all process metrics
+    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ','
+    return all_process_metrics

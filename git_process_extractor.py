@@ -4,8 +4,8 @@ Process extractor from git repositories
 April 01, 2017
 '''
 import os, subprocess, numpy as np
-
-
+monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
+                         'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
 
 def getCommitCount(param_file_path, repo_path):
    totalCountForChurn = 0
@@ -34,8 +34,6 @@ def calculateMonthDiffFromTwoDates(early, latest):
     return (latest_dt.year - early_dt.year)*12 + latest_dt.month - early_dt.month
 def getAge(param_file_path, repo_path):
    totalCountForChurn   = 0
-   monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
-                           'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
 
    cdCommand            = "cd " + repo_path + " ; "
    theFile              = os.path.relpath(param_file_path, repo_path)
@@ -58,8 +56,67 @@ def getAge(param_file_path, repo_path):
    return age
 
 
+
+def getUniqueDevCount(param_file_path, repo_path):
+
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   #print "full path: {}, repo path:{}, theFile:{}".format(param_file_path, repo_path, theFile)
+   commitCountCmd    = " git blame "+ theFile +"  | awk '{print $2}' | cut -d'(' -f2 "
+   command2Run = cdCommand + commitCountCmd
+
+   commit_count_output = subprocess.check_output(['bash','-c', command2Run])
+   author_count_output = commit_count_output.split('\n')
+   author_count_output = [x_ for x_ in author_count_output if x_!='']
+   author_count        = len(np.unique(author_count_output))
+   #print author_count
+   return author_count
+
+def getAvgConsecutiveTimeDiff(month_year_list_param):
+    counter = 0
+    consecList = []
+    len_    = len(month_year_list_param)
+    for index_ in xrange(len_):
+        first_  = month_year_list_param[index_]
+        if((index_+1) < len_):
+          second_ = month_year_list_param[index_+1]
+          month_diff = calculateMonthDiffFromTwoDates(first_, second_)
+          consecList.append(month_diff)
+    print consecList
+    avg_month_diff = round(np.mean(consecList), 5)
+    return avg_month_diff
+
+
+def getAverageTimeBetweenEdits(param_file_path, repo_path):
+
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   commitCommand        = "git log  --format=%cd " + theFile + " | awk '{ print $2 $3 $5}' | sed -e 's/ /,/g'"
+   command2Run          = cdCommand + commitCommand
+
+   dt_churn_output = subprocess.check_output(['bash','-c', command2Run])
+   dt_churn_output = dt_churn_output.split('\n')
+   dt_churn_output = [x_ for x_ in dt_churn_output if x_!='']
+   #print dt_churn_output
+   monthList = [dob[0:3] for dob in  dt_churn_output]
+   yearist = [dob[-4:] for dob in  dt_churn_output]
+   monthAndYeatList = [dob[-4:] + '-' + monthDict[dob[0:3]] for dob in dt_churn_output]
+   monthAndYeatList.sort()
+   print monthAndYeatList
+   avgConsecutiveTimeDiff = getAvgConsecutiveTimeDiff(monthAndYeatList)
+   return avgConsecutiveTimeDiff
+
+
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
     #get age
     AGE  = getAge(file_path_p, repo_path_p)
+    #get DEV
+    DEV = getUniqueDevCount(file_path_p, repo_path_p)
+    #get AVERAGE TIME BETWEEN EDITS
+    AVGTIMEOFEDITS = getAverageTimeBetweenEdits(file_path_p, repo_path_p)
+
+    ## all process metrics
+    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ','
+    return all_process_metrics
