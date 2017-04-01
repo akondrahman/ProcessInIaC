@@ -145,6 +145,38 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
    return totalDeletedLinesForChurn
 
 
+
+
+def getAverageChangedLines(file_p, repo_p):
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   churnDeletedCommand = " git log --numstat --oneline " + theFile + " |  awk '!(NR%2)' | awk '{ print $2 }'"
+   command2Run = cdCommand + churnDeletedCommand
+
+   del_churn_output = subprocess.check_output(['bash','-c', command2Run])
+   del_churn_output = del_churn_output.split('\n')
+   del_churn_output = [x_ for x_ in del_churn_output if x_!='']
+   del_churn_output = [int(y_) for y_ in del_churn_output]
+
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   churnAddedCommand = " git log --numstat --oneline " + theFile +  " |  awk '!(NR%2)' | awk '{ print $1 }' "
+   command2Run = cdCommand + churnAddedCommand
+
+   add_churn_output = subprocess.check_output(['bash','-c', command2Run])
+   add_churn_output = add_churn_output.split('\n')
+   add_churn_output = [x_ for x_ in add_churn_output if x_!='']
+   add_churn_output = [int(y_) for y_ in add_churn_output ]
+
+   chanegHolder     = add_churn_output + del_churn_output
+   print chanegHolder
+   avgChangeLOC     = np.mean(chanegHolder)
+   print avgChangeLOC
+   return avgChangeLOC
+
+
+
+
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
@@ -172,7 +204,11 @@ def getProcessMetrics(file_path_p, repo_path_p):
     ##Deletion Normalized
     DELNORM      = round(float(DELETETOTALLINES)/float(TOT_LOC_CHNG), 5)
 
+    ### AVG CHANGED LINES PER COMMIT
+    AVGCHNG      = getAverageChangedLines(file_path_p, repo_path_p)
+
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
+    all_process_metrics = all_process_metrics + str(AVGCHNG) + ','
     return all_process_metrics
