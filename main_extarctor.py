@@ -37,5 +37,5 @@ git_repo_path = '/Users/akond/PUPP_REPOS/wikimedia-downloads/mariadb'
 hg_repo_path  = '/Users/akond/PUPP_REPOS/mozilla-releng-downloads/relabs-puppet/'
 
 
-# getAllProcessMetricsForSingleFile(test_hg_file, hg_repo_path)
+getAllProcessMetricsForSingleFile(test_hg_file, hg_repo_path)
 getAllProcessMetricsForSingleFile(test_git_file, git_repo_path)

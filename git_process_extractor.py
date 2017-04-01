@@ -104,7 +104,26 @@ def getAverageTimeBetweenEdits(param_file_path, repo_path):
    monthAndYeatList.sort()
    #print monthAndYeatList
    avgConsecutiveTimeDiff = getAvgConsecutiveTimeDiff(monthAndYeatList)
+   #print avgConsecutiveTimeDiff
    return avgConsecutiveTimeDiff
+
+def getAddedChurnMetrics(param_file_path, repo_path):
+   totalAddedLinesForChurn = 0
+
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   churnAddedCommand = " git log --numstat --oneline " + theFile +  " |  awk '!(NR%2)' | awk '{ print $1 }' "
+   command2Run = cdCommand + churnAddedCommand
+
+   add_churn_output = subprocess.check_output(['bash','-c', command2Run])
+   add_churn_output = add_churn_output.split('\n')
+   add_churn_output = [x_ for x_ in add_churn_output if x_!='']
+   add_churn_output = [int(y_) for y_ in add_churn_output ]
+   #print add_churn_output
+   totalAddedLinesForChurn = sum(add_churn_output)
+   #print totalAddedLinesForChurn
+   return totalAddedLinesForChurn
+
 
 
 def getProcessMetrics(file_path_p, repo_path_p):
@@ -116,7 +135,13 @@ def getProcessMetrics(file_path_p, repo_path_p):
     DEV = getUniqueDevCount(file_path_p, repo_path_p)
     #get AVERAGE TIME BETWEEN EDITS
     AVGTIMEOFEDITS = getAverageTimeBetweenEdits(file_path_p, repo_path_p)
+    #get total lines added
+    ADDTOTALLINES  = getAddedChurnMetrics(file_path_p, repo_path_p)
+    # get SLOC
+    LOC            = sum(1 for line in open(file_path_p))
+    ##Addition Per LOC
+    ADDPERLOC      = round(float(ADDTOTALLINES)/float(LOC), 5)
 
     ## all process metrics
-    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ','
+    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     return all_process_metrics

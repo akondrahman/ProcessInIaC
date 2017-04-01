@@ -87,7 +87,7 @@ def getAvgConsecutiveTimeDiff(month_year_list_param):
           second_ = month_year_list_param[index_+1]
           month_diff = calculateMonthDiffFromTwoDates(first_, second_)
           consecList.append(month_diff)
-    print consecList
+    #print consecList
     avg_month_diff = round(np.mean(consecList), 5)
     return avg_month_diff
 
@@ -103,9 +103,29 @@ def getAverageTimeBetweenEdits(param_file_path, repo_path):
    dt_churn_output = dt_churn_output.split('\n')
    monthAndYeatList = [x_ for x_ in dt_churn_output if x_!='']
    monthAndYeatList.sort()
-   print monthAndYeatList
+   #print monthAndYeatList
    avgConsecutiveTimeDiff = getAvgConsecutiveTimeDiff(monthAndYeatList)
+   #print avgConsecutiveTimeDiff
    return avgConsecutiveTimeDiff
+def getAddedChurnMetrics(param_file_path, repo_path):
+   totalAddedLinesForChurn = 0
+
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   churnAddedCommand = "hg churn --diffstat " + theFile + " | awk '{print $2}' | cut -d'/' -f1 | cut -d'+' -f2 | sed -e  's/ /,/g'"
+   command2Run = cdCommand + churnAddedCommand
+
+   add_churn_output = subprocess.check_output(['bash','-c', command2Run])
+   add_churn_output = add_churn_output.split('\n')
+   add_churn_output = [x_ for x_ in add_churn_output if x_!='']
+   add_churn_output = [int(y_) for y_ in add_churn_output if (y_.isdigit())==True]
+   #print add_churn_output
+   totalAddedLinesForChurn = sum(add_churn_output)
+   #print totalAddedLinesForChurn
+   return totalAddedLinesForChurn
+
+
+
 
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
@@ -116,7 +136,13 @@ def getProcessMetrics(file_path_p, repo_path_p):
     DEV = getUniqueDevCount(file_path_p, repo_path_p)
     #get AVERAGE TIME BETWEEN EDITS
     AVGTIMEOFEDITS = getAverageTimeBetweenEdits(file_path_p, repo_path_p)
+    #get total lines added
+    ADDTOTALLINES  = getAddedChurnMetrics(file_path_p, repo_path_p)
+    # get SLOC
+    LOC            = sum(1 for line in open(file_path_p))
+    ##Addition Per LOC
+    ADDPERLOC      = round(float(ADDTOTALLINES)/float(LOC), 5)
 
     ## all process metrics
-    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ','
+    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     return all_process_metrics
