@@ -3,6 +3,27 @@ April 01, 2017
 Extracting process metrics
 Akond Rahman
 '''
+import hg_process_extractor, git_process_extractor
+
+
+
+def getAllStaticMetricForSingleFile(full_path_param, repo_path_param):
+  org_of_file                     = ''
+
+  if(MOZFLAG in full_path_param):
+   process_metrics         =  hg_process_extractor.getProcessMetrics(full_path_param, repo_path_param)
+   org_of_file                    =  'MOZILLA'
+  elif(WIKIFLAG in full_path_param):
+   process_metrics         =  git_process_extractor.getProcessMetrics(full_path_param, repo_path_param)
+   org_of_file                    =  'WIKIMEDIA'
+  else:
+   process_metrics         =  git_process_extractor.getProcessMetrics(full_path_param, repo_path_param)
+   org_of_file                    =  'OPENSTACK'
+  #print relative_churn_metrics
+  print "Generated the process metrics ... "
+  print "-"*50
+  all_metric_as_str_for_file      = org_of_file + ',' + full_path_param + ',' + process_metrics
+  return all_metric_as_str_for_file
 
 
 
@@ -14,4 +35,4 @@ test_hg_file  = '/Users/akond/PUPP_REPOS/mozilla-releng-downloads/relabs-puppet/
 test_git_file = '/Users/akond/PUPP_REPOS/wikimedia-downloads/mariadb/manifests/heartbeat.pp'
 git_repo_path = '/Users/akond/PUPP_REPOS/wikimedia-downloads/mariadb'
 hg_repo_path = '/Users/akond/PUPP_REPOS/mozilla-releng-downloads/relabs-puppet/'
-getAllStaticMetricForSingleFile(test_hg_file, hg_repo_path)
+getAllProcessMetricsForSingleFile(test_hg_file, hg_repo_path)
