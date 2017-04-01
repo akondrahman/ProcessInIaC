@@ -190,7 +190,7 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
    author_contrib = dict(Counter(blame_output))
    #print author_contrib
    for author, contribs in author_contrib.items():
-      if((contribs/sloc)< 0.05):
+      if((float(contribs)/float(sloc)) < 0.05):
         minorList.append(author)
    return len(minorList)
 
