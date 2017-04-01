@@ -82,7 +82,7 @@ def getAvgConsecutiveTimeDiff(month_year_list_param):
           second_ = month_year_list_param[index_+1]
           month_diff = calculateMonthDiffFromTwoDates(first_, second_)
           consecList.append(month_diff)
-    print consecList
+    #print consecList
     avg_month_diff = round(np.mean(consecList), 5)
     return avg_month_diff
 
@@ -102,7 +102,7 @@ def getAverageTimeBetweenEdits(param_file_path, repo_path):
    yearist = [dob[-4:] for dob in  dt_churn_output]
    monthAndYeatList = [dob[-4:] + '-' + monthDict[dob[0:3]] for dob in dt_churn_output]
    monthAndYeatList.sort()
-   print monthAndYeatList
+   #print monthAndYeatList
    avgConsecutiveTimeDiff = getAvgConsecutiveTimeDiff(monthAndYeatList)
    return avgConsecutiveTimeDiff
 
