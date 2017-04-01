@@ -3,7 +3,7 @@ extract process metrics from hg repositories
 April 01, 2017
 Akond Rahman
 '''
-import os, subprocess, numpy as np
+import os, subprocess, numpy as np, operator
 monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
                            'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
 from collections import Counter
@@ -183,7 +183,7 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
    blame_output   = blame_output.split('\n')
    blame_output   = [x_ for x_ in blame_output if x_!='']
    author_contrib = dict(Counter(blame_output))
-   print author_contrib
+   #print author_contrib
    for author, contribs in author_contrib.items():
       if((contribs/sloc)< 0.05):
         minorList.append(author)
@@ -191,6 +191,21 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
 
 
 
+
+def getHighestContribsPerc(param_file_path, repo_path, sloc):
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   blameCommand      = " hg annotate -u " + theFile + " | cut -d':' -f1 "
+   command2Run       = cdCommand + blameCommand
+
+   blame_output     = subprocess.check_output(['bash','-c', command2Run])
+   blame_output     = blame_output.split('\n')
+   blame_output     = [x_ for x_ in blame_output if x_!='']
+   author_contrib   = dict(Counter(blame_output))
+   highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
+   highest_contr    = author_contrib[highest_author]
+   print "A:{}, C:{}, dict:{}".format(highest_author, highest_contr, author_contrib)
+   return (round(float(highest_contr)/float(sloc), 5))*100
 
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
@@ -224,6 +239,9 @@ def getProcessMetrics(file_path_p, repo_path_p):
 
     ### GET MINOR CONTRIBUTOR COUNT
     MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
+    ### GET HIGHEST CONTRIBUTOR's Authored lines
+    OWN          = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
+
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
