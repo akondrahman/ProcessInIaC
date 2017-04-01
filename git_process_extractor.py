@@ -4,6 +4,7 @@ Process extractor from git repositories
 April 01, 2017
 '''
 import os, subprocess, numpy as np
+from collections import Counter
 monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
                          'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
 
@@ -169,13 +170,29 @@ def getAverageChangedLines(param_file_path, repo_path):
    add_churn_output = [int(y_) for y_ in add_churn_output ]
 
    chanegHolder     = add_churn_output + del_churn_output
-   print chanegHolder
+   #print chanegHolder
    avgChangeLOC     = np.mean(chanegHolder)
-   print avgChangeLOC
+   #print avgChangeLOC
    return avgChangeLOC
 
 
 
+def getMinorContribCount(param_file_path, repo_path, sloc):
+   minorList = []
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   blameCommand      = " git blame " + theFile + "  | awk '{print $2}'  | cut -d'(' -f2"
+   command2Run       = cdCommand + blameCommand
+
+   blame_output   = subprocess.check_output(['bash','-c', command2Run])
+   blame_output   = add_churn_output.split('\n')
+   blame_output   = [x_ for x_ in add_churn_output if x_!='']
+   author_contrib = dict(Counter(blame_output))
+   print author_contrib
+   for author, contribs in author_contrib.items():
+      if((contribs/sloc)< 0.05):
+        minorList.append(author)
+   return len(minorList)
 
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
@@ -207,8 +224,10 @@ def getProcessMetrics(file_path_p, repo_path_p):
     ### AVG CHANGED LINES PER COMMIT
     AVGCHNG      = getAverageChangedLines(file_path_p, repo_path_p)
 
+    ### GET MINOR CONTRIBUTOR COUNT
+    MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
-    all_process_metrics = all_process_metrics + str(AVGCHNG) + ','
+    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','
     return all_process_metrics
