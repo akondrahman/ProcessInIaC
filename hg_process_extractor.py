@@ -245,5 +245,5 @@ def getProcessMetrics(file_path_p, repo_path_p):
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
-    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','
+    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ','
     return all_process_metrics

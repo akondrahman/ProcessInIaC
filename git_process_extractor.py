@@ -244,8 +244,11 @@ def getProcessMetrics(file_path_p, repo_path_p):
 
     ### GET MINOR CONTRIBUTOR COUNT
     MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
+    ### GET HIGHEST CONTRIBUTOR's Authored lines
+    OWN          = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
+
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
-    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','
+    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ','
     return all_process_metrics
