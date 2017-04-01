@@ -3,7 +3,7 @@ Akond Rahman
 Process extractor from git repositories
 April 01, 2017
 '''
-import os, subprocess, numpy as np
+import os, subprocess, numpy as np, operator
 from collections import Counter
 monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
                          'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
@@ -209,7 +209,7 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    author_contrib   = dict(Counter(blame_output))
    highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
    highest_contr    = author_contrib[highest_author]
-   print "A:{}, C:{}, dict:{}".format(highest_author, highest_contr, author_contrib)
+   print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
    return (round(float(highest_contr)/float(sloc), 5))*100
 
 def getProcessMetrics(file_path_p, repo_path_p):

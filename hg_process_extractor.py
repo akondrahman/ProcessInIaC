@@ -185,7 +185,7 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
    author_contrib = dict(Counter(blame_output))
    #print author_contrib
    for author, contribs in author_contrib.items():
-      if((contribs/sloc)< 0.05):
+      if(float(contribs/sloc) < 0.05):
         minorList.append(author)
    return len(minorList)
 
@@ -204,7 +204,7 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    author_contrib   = dict(Counter(blame_output))
    highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
    highest_contr    = author_contrib[highest_author]
-   print "A:{}, C:{}, dict:{}".format(highest_author, highest_contr, author_contrib)
+   print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
    return (round(float(highest_contr)/float(sloc), 5))*100
 
 def getProcessMetrics(file_path_p, repo_path_p):
