@@ -147,7 +147,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
 
 
 
-def getAverageChangedLines(file_p, repo_p):
+def getAverageChangedLines(param_file_path, repo_path):
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
    churnDeletedCommand = " git log --numstat --oneline " + theFile + " |  awk '!(NR%2)' | awk '{ print $2 }'"

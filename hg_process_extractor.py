@@ -147,7 +147,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
 
 
 
-def getAverageChangedLines(file_, repo_):
+def getAverageChangedLines(param_file_path, repo_path):
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
    churnDeletedCommand = " hg churn --diffstat " + theFile + " | awk '{print $2}' | cut -d'/' -f2 | cut -d'-' -f2 | sed -e  's/ /,/g'"
