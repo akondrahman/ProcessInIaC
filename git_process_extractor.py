@@ -185,8 +185,8 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
    command2Run       = cdCommand + blameCommand
 
    blame_output   = subprocess.check_output(['bash','-c', command2Run])
-   blame_output   = add_churn_output.split('\n')
-   blame_output   = [x_ for x_ in add_churn_output if x_!='']
+   blame_output   = blame_output.split('\n')
+   blame_output   = [x_ for x_ in blame_output if x_!='']
    author_contrib = dict(Counter(blame_output))
    print author_contrib
    for author, contribs in author_contrib.items():
