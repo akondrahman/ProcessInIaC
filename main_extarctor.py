@@ -12,14 +12,14 @@ def getAllProcessMetricsForSingleFile(full_path_param, repo_path_param):
 
   if(MOZFLAG in full_path_param):
    process_metrics         =  hg_process_extractor.getProcessMetrics(full_path_param, repo_path_param)
-   org_of_file                    =  'MOZILLA'
+   org_of_file             =  'MOZILLA'
   elif(WIKIFLAG in full_path_param):
    process_metrics         =  git_process_extractor.getProcessMetrics(full_path_param, repo_path_param)
-   org_of_file                    =  'WIKIMEDIA'
+   org_of_file             =  'WIKIMEDIA'
   else:
    process_metrics         =  git_process_extractor.getProcessMetrics(full_path_param, repo_path_param)
-   org_of_file                    =  'OPENSTACK'
-  #print relative_churn_metrics
+   org_of_file             =  'OPENSTACK'
+  print process_metrics
   print "Generated the process metrics ... "
   print "-"*50
   all_metric_as_str_for_file      = org_of_file + ',' + full_path_param + ',' + process_metrics

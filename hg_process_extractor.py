@@ -154,6 +154,7 @@ def getProcessMetrics(file_path_p, repo_path_p):
     DEV = getUniqueDevCount(file_path_p, repo_path_p)
     #get AVERAGE TIME BETWEEN EDITS
     AVGTIMEOFEDITS = getAverageTimeBetweenEdits(file_path_p, repo_path_p)
+
     #get total lines added
     ADDTOTALLINES  = getAddedChurnMetrics(file_path_p, repo_path_p)
     # get SLOC
@@ -165,7 +166,14 @@ def getProcessMetrics(file_path_p, repo_path_p):
     ##Deletion Per LOC
     DELPERLOC      = round(float(DELETETOTALLINES)/float(LOC), 5)
 
+    ### TOTAL LINES CHANGED
+    TOT_LOC_CHNG = ADDTOTALLINES + DELETETOTALLINES
+    ##Addition Normalized
+    ADDNORM      = round(float(ADDTOTALLINES)/float(TOT_LOC_CHNG), 5)
+    ##Deletion Normalized
+    DELNORM      = round(float(DELETETOTALLINES)/float(TOT_LOC_CHNG), 5)
+
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
-    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ','
+    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
     return all_process_metrics
