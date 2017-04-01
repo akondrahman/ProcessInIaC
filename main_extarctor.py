@@ -4,10 +4,10 @@ Extracting process metrics
 Akond Rahman
 '''
 import hg_process_extractor, git_process_extractor
+MOZFLAG='moz'
+WIKIFLAG='wikimedia'
 
-
-
-def getAllStaticMetricForSingleFile(full_path_param, repo_path_param):
+def getAllProcessMetricsForSingleFile(full_path_param, repo_path_param):
   org_of_file                     = ''
 
   if(MOZFLAG in full_path_param):
