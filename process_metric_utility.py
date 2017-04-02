@@ -52,3 +52,9 @@ def createDataset(str2Dump, datasetNameParam):
 
    str2Write = headerStr + '\n' + str2Dump
    return dumpContentIntoFile(str2Write, datasetNameParam)
+def getDatasetFromCSV(fileParam, dataTypeFlag=True):
+  if dataTypeFlag:
+    data_set_to_return = np.genfromtxt(fileParam, delimiter=',', skip_header=1, dtype='float')
+  else:
+        data_set_to_return = np.genfromtxt(fileParam, delimiter=',', skip_header=1,  dtype='str')
+  return data_set_to_return

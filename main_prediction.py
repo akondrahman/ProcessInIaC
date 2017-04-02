@@ -4,7 +4,7 @@ main file for prediction model
 
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn import decomposition
-import Utility , numpy as np , sklearn_models, pandas as pd
+import process_metric_utility , numpy as np , pandas as pd
 glimpseIndex=10
 
 def getPCAInsights(pcaParamObj, which_component_to_see):
@@ -17,7 +17,7 @@ def getPCAInsights(pcaParamObj, which_component_to_see):
     print "-"*50
 
 
-print "Started at:", Utility.giveTimeStamp()
+print "Started at:", process_metric_utility.giveTimeStamp()
 print "-"*50
 '''
   first is mozilla then wiki
@@ -27,7 +27,7 @@ dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset
 
 print "The dataset is:", dataset_file
 print "-"*50
-full_dataset_from_csv = Utility.getDatasetFromCSV(dataset_file)
+full_dataset_from_csv = process_metric_utility.getDatasetFromCSV(dataset_file)
 full_rows, full_cols = np.shape(full_dataset_from_csv)
 print "Total number of columns", full_cols
 ## we will skip the first column, as it has file names
@@ -36,7 +36,7 @@ all_features = full_dataset_from_csv[:, 2:feature_cols]
 print "Glimpse at features (11th entry in dataset): \n", all_features[glimpseIndex]
 print "-"*50
 
-dataset_for_labels = Utility.getDatasetFromCSV(dataset_file)  ## unlike phase-1, the labels are '1' and '0', so need to take input as str
+dataset_for_labels = process_metric_utility.getDatasetFromCSV(dataset_file)  ## unlike phase-1, the labels are '1' and '0', so need to take input as str
 label_cols = full_cols - 1
 all_labels  =  dataset_for_labels[:, label_cols]
 print "Glimpse at  labels (11th entry in dataset):", all_labels[glimpseIndex]
@@ -49,6 +49,7 @@ print "-"*50
 '''
 PCA ZONE
 '''
+pca_comp = 50
 '''
 PCA reff:
 1. http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA.fit
@@ -82,4 +83,4 @@ print "-"*50
 print "-"*50
 # sklearn_models.performIterativeModeling(selected_features, all_labels, 10, 100)
 print "-"*50
-print "Ended at:", Utility.giveTimeStamp()
+print "Ended at:", process_metric_utility.giveTimeStamp()
