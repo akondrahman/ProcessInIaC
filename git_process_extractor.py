@@ -117,7 +117,7 @@ def getAddedChurnMetrics(param_file_path, repo_path):
 
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
-   churnAddedCommand = " git log --numstat --oneline " + theFile +  " |  awk '!(NR%2)' | awk '{ print $1 }' "
+   churnAddedCommand = " git log --numstat --oneline "+ theFile +" | grep '" + theFile + "' | awk '{ print $1 }' "
    command2Run = cdCommand + churnAddedCommand
 
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
@@ -137,7 +137,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
 
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
-   churnDeletedCommand = " git log --numstat --oneline " + theFile + " |  awk '!(NR%2)' | awk '{ print $2 }'"
+   churnAddedCommand = " git log --numstat --oneline "+ theFile +" | grep '" + theFile + "' | awk '{ print $2 }' "
    command2Run = cdCommand + churnDeletedCommand
 
    del_churn_output = subprocess.check_output(['bash','-c', command2Run])
