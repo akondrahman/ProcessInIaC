@@ -154,7 +154,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
 
 
 
-def getAverageChangedLines(param_file_path, repo_path):
+def getAverageAndTotalChangedLines(param_file_path, repo_path):
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
    churnDeletedCommand = " git log --numstat --oneline "+ theFile +" | grep '" + theFile + "' | awk '{ print $2 }' "
@@ -178,11 +178,9 @@ def getAverageChangedLines(param_file_path, repo_path):
    chanegHolder     = add_churn_output + del_churn_output
    #print chanegHolder
    avgChangeLOC     = np.mean(chanegHolder)
+   sumChangeLOC     = sum(chanegHolder)
    #print avgChangeLOC
-   return avgChangeLOC
-
-
-
+   return avgChangeLOC, sumChangeLOC
 
 def getMinorContribCount(param_file_path, repo_path, sloc):
    minorList = []
@@ -287,7 +285,7 @@ def getProcessMetrics(file_path_p, repo_path_p):
     DELNORM      = round(float(DELETETOTALLINES)/float(TOT_LOC_CHNG), 5)
 
     ### AVG CHANGED LINES PER COMMIT
-    AVGCHNG      = getAverageChangedLines(file_path_p, repo_path_p)
+    AVGCHNG, SUMCHNG      = getAverageAndTotalChangedLines(file_path_p, repo_path_p)
 
     ### GET MINOR CONTRIBUTOR COUNT
     MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
@@ -295,9 +293,14 @@ def getProcessMetrics(file_path_p, repo_path_p):
     OWN          = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
     ### GET Scatterness of a file
     SCTR         = getDeveloperScatternessOfFile(file_path_p, repo_path_p, LOC)
+    ### GET total lines of code changed per SLOC
+    TOTCHNGPERLOC = round(float(TOT_LOC_CHNG)/float(LOC), 5)
 
     ## all process metrics
-    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
-    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
-    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
+    #all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
+    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(ADDPERLOC) + ','
+    #all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
+    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(SUMCHNG) + ',' + str(TOTCHNGPERLOC) + ','
+    # all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
+    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','  + str(SCTR) + ','
     return all_process_metrics

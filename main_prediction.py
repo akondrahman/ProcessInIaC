@@ -22,8 +22,8 @@ print "-"*50
 '''
   first is mozilla then wiki
 '''
-dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_MOZILLA.csv"
-# dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_WIKIMEDIA.csv"
+# dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_MOZILLA.csv"
+dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_WIKIMEDIA.csv"
 
 print "The dataset is:", dataset_file
 print "-"*50
@@ -79,8 +79,10 @@ print "-"*50
 #####print "Shape of transformed data:", selected_features.shape
 print "Transformed features: \n", selected_features
 print "-"*50
-#sklearn_utility.performModeling(selected_features, all_labels, 10)
+# sklearn_utility.performModeling(selected_features, all_labels, 10)
 print "-"*50
 sklearn_models.performIterativeModeling(selected_features, all_labels, 10, 100)
+print "-"*50
+print "The dataset was:", dataset_file
 print "-"*50
 print "Ended at:", process_metric_utility.giveTimeStamp()

@@ -154,7 +154,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
 
 
 
-def getAverageChangedLines(param_file_path, repo_path):
+def getAverageAndTotalChangedLines(param_file_path, repo_path):
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
    churnDeletedCommand = " hg churn --diffstat " + theFile + " | cut -d'+' -f2 | cut -d'/' -f2 | cut -d'-' -f2"
@@ -173,14 +173,15 @@ def getAverageChangedLines(param_file_path, repo_path):
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
    add_churn_output = add_churn_output.split('\n')
    add_churn_output = [x_ for x_ in add_churn_output if x_!='']
-   add_churn_output = [x_ for x_ in add_churn_output if '@' not in x_]         
+   add_churn_output = [x_ for x_ in add_churn_output if '@' not in x_]
    add_churn_output = [int(y_) for y_ in add_churn_output if (y_.isdigit())==True]
 
    chanegHolder     = add_churn_output + del_churn_output
    #print chanegHolder
    avgChangeLOC     = np.mean(chanegHolder)
+   sumChangeLOC     = sum(chanegHolder)
    #print avgChangeLOC
-   return avgChangeLOC
+   return avgChangeLOC, sumChangeLOC
 def getMinorContribCount(param_file_path, repo_path, sloc):
    minorList = []
    cdCommand         = "cd " + repo_path + " ; "
@@ -287,7 +288,7 @@ def getProcessMetrics(file_path_p, repo_path_p):
     TOT_LOC_CHNG = ADDTOTALLINES + DELETETOTALLINES
 
     ### AVG CHANGED LINES PER COMMIT
-    AVGCHNG      = getAverageChangedLines(file_path_p, repo_path_p)
+    AVGCHNG, SUMCHNG      = getAverageAndTotalChangedLines(file_path_p, repo_path_p)
 
     if(TOT_LOC_CHNG==0):
         ##Addition Normalized
@@ -307,9 +308,14 @@ def getProcessMetrics(file_path_p, repo_path_p):
     OWN          = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
     ### GET Scatterness of a file
     SCTR         = getDeveloperScatternessOfFile(file_path_p, repo_path_p, LOC)
+    ### GET total lines of code changed per SLOC
+    TOTCHNGPERLOC = round(float(TOT_LOC_CHNG)/float(LOC), 5)
 
     ## all process metrics
-    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
-    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
-    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
+    #all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
+    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(ADDPERLOC) + ','
+    #all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
+    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(SUMCHNG) + ',' + str(TOTCHNGPERLOC) + ','
+    # all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
+    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','  + str(SCTR) + ','
     return all_process_metrics
