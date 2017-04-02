@@ -117,7 +117,7 @@ def getAddedChurnMetrics(param_file_path, repo_path):
 
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
-   churnAddedCommand = "hg churn --diffstat " + theFile + " | awk '{print $2}' | cut -d'/' -f1 | cut -d'+' -f2 | sed -e  's/ /,/g'"
+   churnAddedCommand = "hg churn --diffstat " + theFile + " | cut -d'+' -f2 | cut -d'/' -f1"
    command2Run = cdCommand + churnAddedCommand
 
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
@@ -137,7 +137,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
 
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
-   churnDeletedCommand = " hg churn --diffstat " + theFile + " | awk '{print $2}' | cut -d'/' -f2 | cut -d'-' -f2 | sed -e  's/ /,/g'"
+   churnDeletedCommand = " hg churn --diffstat " + theFile + " | cut -d'+' -f2 | cut -d'/' -f2 | cut -d'-' -f2"
    command2Run = cdCommand + churnDeletedCommand
 
    del_churn_output = subprocess.check_output(['bash','-c', command2Run])
@@ -155,7 +155,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
 def getAverageChangedLines(param_file_path, repo_path):
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
-   churnDeletedCommand = " hg churn --diffstat " + theFile + " | awk '{print $2}' | cut -d'/' -f2 | cut -d'-' -f2 | sed -e  's/ /,/g'"
+   churnDeletedCommand = " hg churn --diffstat " + theFile + " | cut -d'+' -f2 | cut -d'/' -f2 | cut -d'-' -f2"
    command2Run = cdCommand + churnDeletedCommand
 
    del_churn_output = subprocess.check_output(['bash','-c', command2Run])
@@ -164,7 +164,7 @@ def getAverageChangedLines(param_file_path, repo_path):
    del_churn_output = [int(y_) for y_ in del_churn_output]
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
-   churnAddedCommand = "hg churn --diffstat " + theFile + " | awk '{print $2}' | cut -d'/' -f1 | cut -d'+' -f2 | sed -e  's/ /,/g'"
+   churnAddedCommand = "hg churn --diffstat " + theFile + " | cut -d'+' -f2 | cut -d'/' -f1"
    command2Run = cdCommand + churnAddedCommand
 
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
@@ -261,21 +261,38 @@ def getProcessMetrics(file_path_p, repo_path_p):
     ADDTOTALLINES  = getAddedChurnMetrics(file_path_p, repo_path_p)
     # get SLOC
     LOC            = sum(1 for line in open(file_path_p))
-    ##Addition Per LOC
-    ADDPERLOC      = round(float(ADDTOTALLINES)/float(LOC), 5)
+
     #get total lines deleted
     DELETETOTALLINES  = getDeletedChurnMetrics(file_path_p, repo_path_p)
-    ##Deletion Per LOC
-    DELPERLOC      = round(float(DELETETOTALLINES)/float(LOC), 5)
+    if(LOC==0):
+        ##Addition Per LOC
+        ADDPERLOC      = 0
+        ##Deletion Per LOC
+        DELPERLOC      = 0
+    else:
+        ##Addition Per LOC
+        ADDPERLOC      = round(float(ADDTOTALLINES)/float(LOC), 5)
+        ##Deletion Per LOC
+        DELPERLOC      = round(float(DELETETOTALLINES)/float(LOC), 5)
+
 
     ### TOTAL LINES CHANGED
     TOT_LOC_CHNG = ADDTOTALLINES + DELETETOTALLINES
-    ##Addition Normalized
-    ADDNORM      = round(float(ADDTOTALLINES)/float(TOT_LOC_CHNG), 5)
-    ##Deletion Normalized
-    DELNORM      = round(float(DELETETOTALLINES)/float(TOT_LOC_CHNG), 5)
+
     ### AVG CHANGED LINES PER COMMIT
     AVGCHNG      = getAverageChangedLines(file_path_p, repo_path_p)
+
+    if(TOT_LOC_CHNG==0):
+        ##Addition Normalized
+        ADDNORM      = 0
+        ##Deletion Normalized
+        DELNORM      = 0
+    else:
+        ##Addition Normalized
+        ADDNORM      = round(float(ADDTOTALLINES)/float(TOT_LOC_CHNG), 5)
+        ##Deletion Normalized
+        DELNORM      = round(float(DELETETOTALLINES)/float(TOT_LOC_CHNG), 5)
+
 
     ### GET MINOR CONTRIBUTOR COUNT
     MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
