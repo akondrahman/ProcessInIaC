@@ -7,6 +7,11 @@ import os, subprocess, numpy as np, operator
 monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
                            'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
 from collections import Counter
+from  scipy.stats import entropy
+
+
+
+
 def getCommitCount(param_file_path, repo_path):
    totalCommitCount = 0
 
@@ -208,12 +213,17 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    return (round(float(highest_contr)/float(sloc), 5))*100
 
 def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
+   '''
+   output list
+   '''
+   lineNoProb        = []
+   lineNoCnt         = []
+   '''
+   '''
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
    blameCommand      = " hg annotate -uln   " + theFile + "  | cut -d':' -f2 "
    command2Run       = cdCommand + blameCommand
-   lineNoProb        = []
-
    blame_output      = subprocess.check_output(['bash','-c', command2Run])
    blame_output      = blame_output.split('\n')
    blame_output      = [x_ for x_ in blame_output if x_!='']
@@ -225,12 +235,15 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
           line_cnt  = line_chng_dict[line_key]
        else:
           line_cnt  = 0
-       line_prob = float(line_cnt)/float(sloc)
-       lineNoProb.append(line_prob)
+       line_prob = round(float(line_cnt)/float(sloc), 4)
+       lineNoProb.append(line_prob) ### Version 1
+       lineNoCnt.append(line_cnt)   ### Version 2
    #print "len:{}, list:{}, loc:{}".format(len(lineNoProb), lineNoProb, sloc)
-   scatterness = entropy(lineNoProb)
-   print "list:{} \n...\n entropy:{}".format(lineNoProb, scatterness)
-   return scatterness
+   scatterness_prob = entropy(lineNoProb)  ##Version 1
+   scatterness_cnt  = entropy(lineNoCnt)  ##Version 2
+   print "list:{} ...\n prob->entropy:{}".format(lineNoProb, scatterness_prob)
+   print "list:{} ... len() ...\n count->entropy:{}".format(lineNoCnt, len(lineNoCnt), scatterness_cnt)
+   return scatterness_prob, scatterness_cnt
 
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count

@@ -218,7 +218,13 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    return (round(float(highest_contr)/float(sloc), 5))*100
 
 def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
+   '''
+   output list
+   '''
    lineNoProb        = []
+   lineNoCnt         = []
+   '''
+   '''
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
    blameCommand      = " git blame -n " + theFile + " | awk '{print $2}' "
@@ -237,11 +243,14 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
        else:
           line_cnt  = 0
        line_prob = float(line_cnt)/float(sloc)
-       lineNoProb.append(line_prob)
-
-   scatterness = entropy(lineNoProb)
-   print "list:{} \n...\n entropy:{}".format(lineNoProb, scatterness)
-   return scatterness
+       lineNoProb.append(line_prob) ### Version 1
+       lineNoCnt.append(line_cnt)   ### Version 2
+   #print "len:{}, list:{}, loc:{}".format(len(lineNoProb), lineNoProb, sloc)
+   scatterness_prob = entropy(lineNoProb)  ##Version 1
+   scatterness_cnt  = entropy(lineNoCnt)  ##Version 2
+   print "list:{} ...\n prob->entropy:{}".format(lineNoProb, scatterness_prob)
+   print "list:{} ... len() ...\n count->entropy:{}".format(lineNoCnt, len(lineNoCnt), scatterness_cnt)
+   return scatterness_prob, scatterness_cnt
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
