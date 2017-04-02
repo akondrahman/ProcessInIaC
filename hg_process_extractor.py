@@ -204,8 +204,23 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    author_contrib   = dict(Counter(blame_output))
    highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
    highest_contr    = author_contrib[highest_author]
-   print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
+   #print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
    return (round(float(highest_contr)/float(sloc), 5))*100
+
+def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   blameCommand      = " hg annotate -uln   " + theFile + "  | cut -d':' -f2 "
+   command2Run       = cdCommand + blameCommand
+
+   blame_output     = subprocess.check_output(['bash','-c', command2Run])
+   blame_output     = blame_output.split('\n')
+   blame_output     = [x_ for x_ in blame_output if x_!='']
+   line_chng_dict   = dict(Counter(blame_output))
+   print line_chng_dict
+
+
+
 
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
@@ -241,9 +256,11 @@ def getProcessMetrics(file_path_p, repo_path_p):
     MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
     ### GET HIGHEST CONTRIBUTOR's Authored lines
     OWN          = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
+    ### GET Scatterness of a file
+    SCTR         = getDeveloperScatternessOfFile(file_path_p, repo_path_p, LOC)
 
     ## all process metrics
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
-    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ','
+    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
     return all_process_metrics
