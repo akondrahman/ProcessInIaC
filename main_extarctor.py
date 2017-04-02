@@ -27,6 +27,20 @@ def getAllProcessMetricsForSingleFile(full_path_param, repo_path_param):
 
 
 
+def getAllProcessMetricForAllFiles(pupp_map_dict_param):
+   datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/MOZ_WIKI_FULL_PROCESS_DATASET.csv'
+   str2ret=''
+   fileCount = 0
+   for file_, details_ in pupp_map_dict_param.items():
+     fileCount = fileCount + 1
+     repo_                    = details_[1]
+     defect_status            = details_[0]
+     print "Analyzing ... \nfile#{}\ndefect status:{}\nfile:{}\nrepo:{}".format(fileCount, defect_status, file_, repo_)
+     all_metric_for_this_file = getAllProcessMetricsForSingleFile(file_, repo_)
+     str2ret = str2ret + all_metric_for_this_file + defect_status + '\n'
+     print "="*75
+   #static_metric_utility.createDataset(str2ret, datasetFile2Save)
+   return str2ret
 
 '''
 testing purpose
