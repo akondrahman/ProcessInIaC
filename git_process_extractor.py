@@ -246,12 +246,12 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
        lineNoProb.append(line_prob) ### Version 1
        lineNoCnt.append(line_cnt)   ### Version 2
    #print "len:{}, list:{}, loc:{}".format(len(lineNoProb), lineNoProb, sloc)
-   scatterness_prob = entropy(lineNoProb)  ##Version 1
-   scatterness_cnt  = entropy(lineNoCnt)  ##Version 2
+   scatterness_prob = round(entropy(lineNoProb), 5)  ##Version 1
+   scatterness_cnt  = round(entropy(lineNoCnt), 5)  ##Version 2
    #print "list:{} ...\n prob->entropy:{}".format(lineNoProb, scatterness_prob)
-   print "list:{} ...\n count->entropy:{} ...sloc:{}".format(lineNoCnt, scatterness_cnt, sloc)
+   #print "list:{} ...\n count->entropy:{} ...sloc:{}".format(lineNoCnt, scatterness_cnt, sloc)
    #return scatterness_prob, scatterness_cnt
-   return scatterness_cnt   
+   return scatterness_cnt
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
