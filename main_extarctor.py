@@ -37,5 +37,18 @@ git_repo_path = '/Users/akond/PUPP_REPOS/wikimedia-downloads/mariadb'
 hg_repo_path  = '/Users/akond/PUPP_REPOS/mozilla-releng-downloads/relabs-puppet/'
 
 
-getAllProcessMetricsForSingleFile(test_hg_file, hg_repo_path)
-getAllProcessMetricsForSingleFile(test_git_file, git_repo_path)
+# getAllProcessMetricsForSingleFile(test_hg_file, hg_repo_path)
+# getAllProcessMetricsForSingleFile(test_git_file, git_repo_path)
+
+'''
+for dataset geenration
+'''
+print "Started at:", process_metric_utility.gigiveTimeStamp()
+fullPuppMap   = process_metric_utility.getPuppetFileDetails()
+print "Loaded the mapping of files ... "
+print "-"*100
+getAllStaticMatricForAllFiles(fullPuppMap)
+print "We analyzed {} Puppet files".format(len(fullPuppMap))
+print "-"*100
+print "Ended at:", process_metric_utility.gigiveTimeStamp()
+print "-"*100
