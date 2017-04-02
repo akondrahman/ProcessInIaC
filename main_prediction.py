@@ -79,8 +79,8 @@ print "-"*50
 #####print "Shape of transformed data:", selected_features.shape
 print "Transformed features: \n", selected_features
 print "-"*50
-sklearn_utility.performModeling(selected_features, all_labels, 10)
+#sklearn_utility.performModeling(selected_features, all_labels, 10)
 print "-"*50
-# sklearn_models.performIterativeModeling(selected_features, all_labels, 10, 100)
+sklearn_models.performIterativeModeling(selected_features, all_labels, 10, 100)
 print "-"*50
 print "Ended at:", process_metric_utility.giveTimeStamp()
