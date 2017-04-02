@@ -109,6 +109,8 @@ def getAverageTimeBetweenEdits(param_file_path, repo_path):
    monthAndYeatList.sort()
    #print monthAndYeatList
    avgConsecutiveTimeDiff = getAvgConsecutiveTimeDiff(monthAndYeatList)
+   if((avgConsecutiveTimeDiff == float("NaN") or (avgConsecutiveTimeDiff == float("NaN")):
+        avgConsecutiveTimeDiff = float(0)
    #print avgConsecutiveTimeDiff
    return avgConsecutiveTimeDiff
 
@@ -248,6 +250,11 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
    #print "len:{}, list:{}, loc:{}".format(len(lineNoProb), lineNoProb, sloc)
    scatterness_prob = round(entropy(lineNoProb), 5)  ##Version 1
    scatterness_cnt  = round(entropy(lineNoCnt), 5)  ##Version 2
+   '''
+   handling -inf, inf
+   '''
+   if((scatterness_cnt == float("inf") or (scatterness_cnt == float("inf")):
+     scatterness_cnt = float(0)
    #print "list:{} ...\n prob->entropy:{}".format(lineNoProb, scatterness_prob)
    #print "list:{} ...\n count->entropy:{} ...sloc:{}".format(lineNoCnt, scatterness_cnt, sloc)
    #return scatterness_prob, scatterness_cnt
