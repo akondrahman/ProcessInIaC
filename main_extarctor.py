@@ -3,7 +3,7 @@ April 01, 2017
 Extracting process metrics
 Akond Rahman
 '''
-import hg_process_extractor, git_process_extractor
+import hg_process_extractor, git_process_extractor, process_metric_utility
 MOZFLAG='moz'
 WIKIFLAG='wikimedia'
 
@@ -43,12 +43,12 @@ hg_repo_path  = '/Users/akond/PUPP_REPOS/mozilla-releng-downloads/relabs-puppet/
 '''
 for dataset geenration
 '''
-print "Started at:", process_metric_utility.gigiveTimeStamp()
+print "Started at:", process_metric_utility.giveTimeStamp()
 fullPuppMap   = process_metric_utility.getPuppetFileDetails()
 print "Loaded the mapping of files ... "
 print "-"*100
-getAllStaticMatricForAllFiles(fullPuppMap)
+# getAllProcessMetricForAllFiles(fullPuppMap)
 print "We analyzed {} Puppet files".format(len(fullPuppMap))
 print "-"*100
-print "Ended at:", process_metric_utility.gigiveTimeStamp()
+print "Ended at:", process_metric_utility.giveTimeStamp()
 print "-"*100
