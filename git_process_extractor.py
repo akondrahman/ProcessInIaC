@@ -213,6 +213,7 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    return (round(float(highest_contr)/float(sloc), 5))*100
 
 def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
+   lineNoProb        = []
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
    blameCommand      = " git blame -n " + theFile + " | awk '{print $2}' "
@@ -222,8 +223,13 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
    blame_output     = blame_output.split('\n')
    blame_output     = [x_ for x_ in blame_output if x_!='']
    line_chng_dict   = dict(Counter(blame_output))
-   print line_chng_dict
-
+   #print line_chng_dict
+   for lineNo in xrange(sloc):
+       line_key  = str(lineNo + 1)
+       line_cnt  = line_chng_dict[line_key]
+       line_prob = float(line_cnt)/float(sloc)
+       lineNoProb.append(line_prob)
+   print "len:{}, list:{}".format(len(lineNoProb), lineNoProb)   
 
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
