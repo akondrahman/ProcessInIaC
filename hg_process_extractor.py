@@ -212,18 +212,22 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
    theFile           = os.path.relpath(param_file_path, repo_path)
    blameCommand      = " hg annotate -uln   " + theFile + "  | cut -d':' -f2 "
    command2Run       = cdCommand + blameCommand
+   lineNoProb        = []
 
-   blame_output     = subprocess.check_output(['bash','-c', command2Run])
-   blame_output     = blame_output.split('\n')
-   blame_output     = [x_ for x_ in blame_output if x_!='']
-   line_chng_dict   = dict(Counter(blame_output))
-   print line_chng_dict
+   blame_output      = subprocess.check_output(['bash','-c', command2Run])
+   blame_output      = blame_output.split('\n')
+   blame_output      = [x_ for x_ in blame_output if x_!='']
+   line_chng_dict    = dict(Counter(blame_output))
+   #print line_chng_dict
    for lineNo in xrange(sloc):
        line_key  = str(lineNo + 1)
-       line_cnt  = line_chng_dict[line_key]
+       if (line_key in line_chng_dict):
+          line_cnt  = line_chng_dict[line_key]
+       else:
+          line_cnt  = 0
        line_prob = float(line_cnt)/float(sloc)
        lineNoProb.append(line_prob)
-   print "len:{}, list:{}".format(len(lineNoProb), lineNoProb)   
+   print "len:{}, list:{}".format(len(lineNoProb), lineNoProb)
 
 
 
