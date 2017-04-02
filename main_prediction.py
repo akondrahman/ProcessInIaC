@@ -14,15 +14,16 @@ def getPCAInsights(pcaParamObj, which_component_to_see):
     '''
     top_three_components_index = np.abs(pcaParamObj.components_[which_component_to_see]).argsort()[::-1][:3]
     print top_three_components_index
-
+    print "-"*50
 
 
 print "Started at:", Utility.giveTimeStamp()
+print "-"*50
 '''
   first is mozilla then wiki
 '''
-# dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Prediction-Project/dataset/SYNTHETIC_MOZ_FULL_DATASET.csv"
-dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Prediction-Project/dataset/SYNTHETIC_WIKI_FULL_DATASET.csv"
+dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_MOZILLA.csv"
+# dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_WIKIMEDIA.csv"
 
 print "The dataset is:", dataset_file
 print "-"*50
@@ -74,3 +75,11 @@ print "-"*50
 pca_insight = getPCAInsights(pcaObj, 1)
 print  pca_insight
 print "-"*50
+#####print "Shape of transformed data:", selected_features.shape
+print "Transformed features: \n", selected_features
+print "-"*50
+# sklearn_models.performModeling(selected_features, all_labels, 10)
+print "-"*50
+# sklearn_models.performIterativeModeling(selected_features, all_labels, 10, 100)
+print "-"*50
+print "Ended at:", Utility.giveTimeStamp()
