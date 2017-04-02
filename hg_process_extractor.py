@@ -206,9 +206,12 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    blame_output     = subprocess.check_output(['bash','-c', command2Run])
    blame_output     = blame_output.split('\n')
    blame_output     = [x_ for x_ in blame_output if x_!='']
-   author_contrib   = dict(Counter(blame_output))
-   highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
-   highest_contr    = author_contrib[highest_author]
+   if (len(blame_output) > 0):
+       author_contrib   = dict(Counter(blame_output))
+       highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
+       highest_contr    = author_contrib[highest_author]
+   else:
+       highest_contr    = 0
    #print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
    return (round(float(highest_contr)/float(sloc), 5))*100
 
