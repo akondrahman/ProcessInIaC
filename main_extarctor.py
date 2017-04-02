@@ -39,7 +39,8 @@ def getAllProcessMetricForAllFiles(pupp_map_dict_param):
      all_metric_for_this_file = getAllProcessMetricsForSingleFile(file_, repo_)
      str2ret = str2ret + all_metric_for_this_file + defect_status + '\n'
      print "="*75
-   process_metric_utility.createDataset(str2ret, datasetFile2Save)
+   dump_stats = process_metric_utility.createDataset(str2ret, datasetFile2Save)
+   print "Dumped a file of {} bytes".format(dump_stats)
    return str2ret
 
 '''
