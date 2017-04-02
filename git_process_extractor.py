@@ -4,9 +4,13 @@ Process extractor from git repositories
 April 01, 2017
 '''
 import os, subprocess, numpy as np, operator
-from collections import Counter
+from  collections import Counter
+from  scipy.stats import entropy
 monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
                          'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
+
+
+
 
 def getCommitCount(param_file_path, repo_path):
    totalCountForChurn = 0
@@ -177,6 +181,7 @@ def getAverageChangedLines(param_file_path, repo_path):
 
 
 
+
 def getMinorContribCount(param_file_path, repo_path, sloc):
    minorList = []
    cdCommand         = "cd " + repo_path + " ; "
@@ -233,8 +238,10 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
           line_cnt  = 0
        line_prob = float(line_cnt)/float(sloc)
        lineNoProb.append(line_prob)
-   print "len:{}, list:{}".format(len(lineNoProb), lineNoProb)
 
+   scatterness = entropy(lineNoProb)
+   print "list:{} \n...\n entropy:{}".format(lineNoProb, scatterness)
+   return scatterness
 def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
