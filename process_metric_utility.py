@@ -41,3 +41,14 @@ def giveTimeStamp():
   tsObj = time.time()
   strToret = datetime.datetime.fromtimestamp(tsObj).strftime('%Y-%m-%d %H:%M:%S')
   return strToret
+
+def createDataset(str2Dump, datasetNameParam):
+   headerOfFile0='org,file_,'
+   headerOfFile1='COMM,AGE,DEV,SLOC,AVGTIMEOFEDITS,ADDPERLOC,'
+   headerOfFile2='DELPERLOC,ADDNORM,DELNORM,AVGCHNG,MINOR,OWN,SCTR,'
+   headerOfFile3='defect_status'
+
+   headerStr = headerOfFile0 + headerOfFile1 + headerOfFile2 + headerOfFile3
+
+   str2Write = headerStr + '\n' + str2Dump
+   return dumpContentIntoFile(str2Write, datasetNameParam)

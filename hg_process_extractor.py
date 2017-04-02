@@ -123,7 +123,7 @@ def getAddedChurnMetrics(param_file_path, repo_path):
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
    add_churn_output = add_churn_output.split('\n')
    add_churn_output = [x_ for x_ in add_churn_output if x_!='']
-   add_churn_output = [x_ for x_ in add_churn_output if '@' not in x_]   
+   add_churn_output = [x_ for x_ in add_churn_output if '@' not in x_]
    add_churn_output = [int(y_) for y_ in add_churn_output if (y_.isdigit())==True]
    #print add_churn_output
    totalAddedLinesForChurn = sum(add_churn_output)
@@ -163,6 +163,7 @@ def getAverageChangedLines(param_file_path, repo_path):
    del_churn_output = subprocess.check_output(['bash','-c', command2Run])
    del_churn_output = del_churn_output.split('\n')
    del_churn_output = [x_ for x_ in del_churn_output if x_!='']
+   del_churn_output = [x_ for x_ in del_churn_output if '@' not in x_]
    del_churn_output = [int(y_) for y_ in del_churn_output]
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
@@ -172,6 +173,7 @@ def getAverageChangedLines(param_file_path, repo_path):
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
    add_churn_output = add_churn_output.split('\n')
    add_churn_output = [x_ for x_ in add_churn_output if x_!='']
+   add_churn_output = [x_ for x_ in add_churn_output if '@' not in x_]         
    add_churn_output = [int(y_) for y_ in add_churn_output if (y_.isdigit())==True]
 
    chanegHolder     = add_churn_output + del_churn_output
