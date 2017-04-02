@@ -3,8 +3,8 @@ Akond Rahman
 April 01, 2017
 utility file for process metric
 '''
-import os, csv, numpy as np
-theCompleteCategFile='/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Categ-Project/output/New.Categ.csv'
+import os, csv, numpy as np, time, datetime
+theCompleteCategFile='/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Categ-Project/output/New.Final.Categ.csv'
 
 
 def getPuppetFileDetails():

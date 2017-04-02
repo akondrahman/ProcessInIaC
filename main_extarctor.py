@@ -47,7 +47,7 @@ print "Started at:", process_metric_utility.giveTimeStamp()
 fullPuppMap   = process_metric_utility.getPuppetFileDetails()
 print "Loaded the mapping of files ... "
 print "-"*100
-# getAllProcessMetricForAllFiles(fullPuppMap)
+getAllProcessMetricForAllFiles(fullPuppMap)
 print "We analyzed {} Puppet files".format(len(fullPuppMap))
 print "-"*100
 print "Ended at:", process_metric_utility.giveTimeStamp()
