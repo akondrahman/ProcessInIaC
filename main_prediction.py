@@ -22,8 +22,8 @@ print "-"*50
 '''
   first is mozilla then wiki
 '''
-# dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_MOZILLA.csv"
-dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/PRELIM_WIKIMEDIA.csv"
+# dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/5Metrics.PRELIM_MOZILLA.csv"
+dataset_file="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/5Metrics.PRELIM_WIKIMEDIA.csv"
 
 print "The dataset is:", dataset_file
 print "-"*50
@@ -49,7 +49,7 @@ print "-"*50
 '''
 PCA ZONE
 '''
-pca_comp = 10 ###  must be less than or equal to no of features
+pca_comp = 5 ###  must be less than or equal to no of features
 '''
 PCA reff:
 1. http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA.fit
@@ -66,7 +66,7 @@ for index_ in xrange(len(variance_ratio_of_features)):
     print "Principal component#{}, explained variance:{}".format(index_+1, variance_ratio_of_features[index_])
 print "-"*50
 # see how much explained variance is covered by the number of compoenents , and set the number
-no_features_to_use = 10 #using one PCA you get lesser accuracy, so we'll use 10, always check how much variance is explained
+no_features_to_use = 3 #using one PCA you get lesser accuracy, so we'll use 10, always check how much variance is explained
 print "Of all the features, we will use:", no_features_to_use
 print "-"*50
 pcaObj.n_components=no_features_to_use
@@ -79,10 +79,10 @@ print "-"*50
 #####print "Shape of transformed data:", selected_features.shape
 print "Transformed features: \n", selected_features
 print "-"*50
-# sklearn_utility.performModeling(selected_features, all_labels, 10)
+sklearn_utility.performModeling(selected_features, all_labels, 10)
 print "-"*50
-sklearn_models.performIterativeModeling(selected_features, all_labels, 10, 100)
-print "-"*50
+# sklearn_utility.performIterativeModeling(selected_features, all_labels, 10, 100)
+# print "-"*50
 print "The dataset was:", dataset_file
 print "-"*50
 print "Ended at:", process_metric_utility.giveTimeStamp()

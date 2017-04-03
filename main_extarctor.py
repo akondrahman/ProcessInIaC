@@ -62,7 +62,6 @@ fullPuppMap   = process_metric_utility.getPuppetFileDetails()
 print "Loaded the mapping of files ... "
 print "-"*100
 str_ = getAllProcessMetricForAllFiles(fullPuppMap)
-#####print str_
 print "-"*100
 print "We analyzed {} Puppet files".format(len(fullPuppMap))
 print "-"*100
