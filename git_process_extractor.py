@@ -2,6 +2,8 @@
 Akond Rahman
 Process extractor from git repositories
 April 01, 2017
+Need to modify to handle appropraite number
+of metrics to be generated
 '''
 import os, subprocess, numpy as np, operator
 from  collections import Counter
@@ -270,12 +272,20 @@ def getProcessMetrics(file_path_p, repo_path_p):
     ADDTOTALLINES  = getAddedChurnMetrics(file_path_p, repo_path_p)
     # get SLOC
     LOC            = sum(1 for line in open(file_path_p))
-    ##Addition Per LOC
-    ADDPERLOC      = round(float(ADDTOTALLINES)/float(LOC), 5)
+
     #get total lines deleted
     DELETETOTALLINES  = getDeletedChurnMetrics(file_path_p, repo_path_p)
-    ##Deletion Per LOC
-    DELPERLOC      = round(float(DELETETOTALLINES)/float(LOC), 5)
+
+    if (LOC > 0):
+       ##Addition Per LOC
+       ADDPERLOC      = round(float(ADDTOTALLINES)/float(LOC), 5)
+       ##Deletion Per LOC
+       DELPERLOC      = round(float(DELETETOTALLINES)/float(LOC), 5)
+    else:
+        ADDPERLOC = float(0)
+        DELPERLOC = float(0)
+
+
 
     ### TOTAL LINES CHANGED
     TOT_LOC_CHNG = ADDTOTALLINES + DELETETOTALLINES
