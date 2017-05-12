@@ -289,10 +289,16 @@ def getProcessMetrics(file_path_p, repo_path_p):
 
     ### TOTAL LINES CHANGED
     TOT_LOC_CHNG = ADDTOTALLINES + DELETETOTALLINES
-    ##Addition Normalized
-    ADDNORM      = round(float(ADDTOTALLINES)/float(TOT_LOC_CHNG), 5)
-    ##Deletion Normalized
-    DELNORM      = round(float(DELETETOTALLINES)/float(TOT_LOC_CHNG), 5)
+    if(TOT_LOC_CHNG > 0):
+      ##Addition Normalized
+      ADDNORM      = round(float(ADDTOTALLINES)/float(TOT_LOC_CHNG), 5)
+      ##Deletion Normalized
+      DELNORM      = round(float(DELETETOTALLINES)/float(TOT_LOC_CHNG), 5)
+    else:
+      ##Addition Normalized
+      ADDNORM      = float(0)
+      ##Deletion Normalized
+      DELNORM      = float(0)
 
     ### AVG CHANGED LINES PER COMMIT
     AVGCHNG, SUMCHNG      = getAverageAndTotalChangedLines(file_path_p, repo_path_p)
@@ -303,9 +309,11 @@ def getProcessMetrics(file_path_p, repo_path_p):
     OWN          = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
     ### GET Scatterness of a file
     SCTR         = getDeveloperScatternessOfFile(file_path_p, repo_path_p, LOC)
-    ### GET total lines of code changed per SLOC
-    TOTCHNGPERLOC = round(float(TOT_LOC_CHNG)/float(LOC), 5)
-
+    if(LOC > 0):
+      ### GET total lines of code changed per SLOC
+      TOTCHNGPERLOC = round(float(TOT_LOC_CHNG)/float(LOC), 5)
+    else:
+        TOTCHNGPERLOC = float(0)
     ## all process metrics
     #all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(ADDPERLOC) + ','
