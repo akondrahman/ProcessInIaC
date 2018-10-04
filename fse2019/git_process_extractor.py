@@ -166,12 +166,17 @@ def getProcessMetrics(file_path_p, repo_path_p):
 
     LOC             = sum(1 for line in open(file_path_p))
 
+    NOR_ADD_PER_COM_PER_LOC = NOR_ADD_PER_COM  / float(LOC + 1) 
+    NOR_DEL_PER_COM_PER_LOC = NOR_DEL_PER_COM  / float(LOC + 1) 
+    NOR_TOT_PER_COM_PER_LOC = NOR_TOT_PER_COM  / float(LOC + 1) 
+
     MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
     OWNER_LINES  = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
     SCTR         = getDeveloperScatternessOfFile(file_path_p, repo_path_p, LOC)
 
 
-    all_process_metrics = str(NOR_ADD_PER_COM) + ',' + str(NOR_DEL_PER_COM) + ',' + str(NOR_TOT_PER_COM) + ',' + str(DEV) + ','
-    all_process_metrics = all_process_metrics +  str(MINOR) + ',' + str(OWNER_LINES) + ',' + str(SCTR) + ','
+    all_process_metrics = str(NOR_ADD_PER_COM) + ',' + str(NOR_DEL_PER_COM) + ',' + str(NOR_TOT_PER_COM) + ',' 
+    all_process_metrics = all_process_metrics  + str(NOR_ADD_PER_COM_PER_LOC) + ',' + str(NOR_DEL_PER_COM_PER_LOC) + ',' + str(NOR_TOT_PER_COM_PER_LOC) + ',' + str(DEV) + ','
+    all_process_metrics = all_process_metrics  + str(MINOR) + ',' + str(OWNER_LINES) + ',' + str(SCTR) + ','
 
     return all_process_metrics

@@ -50,9 +50,10 @@ for dataset generation
 '''
 
 ### INPUT
-theCompleteCategFile='/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Categ-Project/output/Mirantis_Categ_For_DB.csv'
-init_dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/ICSE19_TSE/MIR_FUL_PRO.csv'
-ORG = 'MIRANTIS'
+
+# theCompleteCategFile='/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Categ-Project/output/Mirantis_Categ_For_DB.csv'
+# init_dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/ICSE19_TSE/MIR_FUL_PRO.csv'
+# ORG = 'MIRANTIS'
 
 
 # theCompleteCategFile='/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Categ-Project/output/Mozilla.Final.Categ.csv'
@@ -70,7 +71,10 @@ ORG = 'MIRANTIS'
 
 ### OUTPUT
 
-datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_FULL_DATASET.csv'
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_FULL_DATASET.csv'
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_FULL_DATASET.csv'
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_FULL_DATASET.csv'
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_FULL_DATASET.csv'
 
 
 

@@ -49,7 +49,7 @@ def giveTimeStamp():
 
 def createDataset(str2Dump, datasetNameParam):
    headerOfFile0='org,file_,'
-   headerOfFile1='ADD_PER_COM,DEL_PER_COM,TOT_PER_COM,DEVS,'
+   headerOfFile1='ADD_PER_COM,DEL_PER_COM,TOT_PER_COM,ADD_PER_COM_PER_LOC,DEL_PER_COM_PER_LOC,TOT_PER_COM_PER_LOC,DEVS,'
    headerOfFile2='MINORS,OWNER_LINES,SCATERNESS,DEV_MET,COLA_MET,'
    headerOfFile3='defect_status'
 
