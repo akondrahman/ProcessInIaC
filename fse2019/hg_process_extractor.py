@@ -300,7 +300,7 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
    return scatterness_cnt
 
 
-def getProcessMetrics(file_path_p, repo_path_p, prog_to_file_dict):
+def getProcessMetrics(file_path_p, repo_path_p):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
     #get AGE
@@ -371,12 +371,6 @@ def getProcessMetrics(file_path_p, repo_path_p, prog_to_file_dict):
     else:
         COMM_SIZE = float(0)
 
-    #get programmer multi tasking within Puppet and non Puppet files
-    prog_mt_pp_count, prog_mt_non_pp_count= getProgrammerMultiTasking(file_path_p, repo_path_p, prog_to_file_dict)
-    if (DEV > 0):
-       prog_mt_pp_perc,  prog_mt_non_pp_perc = round(float(prog_mt_pp_count)/float(DEV), 5), round(float(prog_mt_non_pp_count)/float(DEV), 5)
-    else:
-       prog_mt_pp_perc,  prog_mt_non_pp_perc = 0, 0
     ## all process metrics
     #all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(ADDPERLOC) + ','
