@@ -107,7 +107,6 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    if (len(author_contrib) > 0):
      highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
      highest_contr    = author_contrib[highest_author]
-     #print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
    else:
      highest_contr = 0
    if sloc <= 0 :
@@ -154,35 +153,25 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
 
 
 def getProcessMetrics(file_path_p, repo_path_p):
-    COMM = getCommitCount(file_path_p, repo_path_p)
     DEV = getUniqueDevCount(file_path_p, repo_path_p)
+
+    COMM = getCommitCount(file_path_p, repo_path_p)
     ADD_PER_COMMITS = getAddedChurnMetrics(file_path_p, repo_path_p)
     DEL_PER_COMMITS = getDeletedChurnMetrics(file_path_p, repo_path_p)    
     TOT_PER_COMMITS = ADD_PER_COMMITS + DEL_PER_COMMITS
 
     NOR_ADD_PER_COM = float(ADD_PER_COMMITS) / float(COMM) 
     NOR_DEL_PER_COM = float(DEL_PER_COMMITS) / float(COMM) 
-
+    NOR_TOT_PER_COM = float(TOT_PER_COMMITS) / float(COMM)
 
     LOC             = sum(1 for line in open(file_path_p))
 
-    ### GET MINOR CONTRIBUTOR COUNT
     MINOR        = getMinorContribCount(file_path_p, repo_path_p, LOC)
-    ### GET HIGHEST CONTRIBUTOR's Authored lines
-    OWN          = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
-    ### GET Scatterness of a file
+    OWNER_LINES  = getHighestContribsPerc(file_path_p, repo_path_p, LOC)
     SCTR         = getDeveloperScatternessOfFile(file_path_p, repo_path_p, LOC)
 
 
-    ## all process metrics
-    #all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
-    all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(ADDPERLOC) + ','
-    #all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(ADDNORM) + ',' + str(DELNORM) + ','
-    all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(SUMCHNG) + ',' + str(TOTCHNGPERLOC) + ','
-    # all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
-    all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','  + str(SCTR) + ','
+    all_process_metrics = str(NOR_ADD_PER_COM) + ',' + str(NOR_DEL_PER_COM) + ',' + str(NOR_TOT_PER_COM) + ',' + str(DEV) + ','
+    all_process_metrics = all_process_metrics +  str(MINOR) + ',' + str(OWNER_LINES) + ',' + str(SCTR) + ','
 
-    #all_process_metrics = all_process_metrics + str(COMM_SIZE) + ',' + str(prog_mt_pp_perc) + ',' + str(prog_mt_non_pp_perc) + ','
-
-    all_process_metrics = all_process_metrics + str(prog_mt_pp_perc) + ',' + str(prog_mt_non_pp_perc) + ','
     return all_process_metrics
