@@ -52,9 +52,13 @@ if __name__=='__main__':
     # pcasToExplore = 5
     # pcas2fit      = 5 
 
-    dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MOZ_FULL_DATASET.csv'
-    pcasToExplore = 5
-    pcas2fit      = 3    
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MOZ_FULL_DATASET.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 3    
+
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MIR_FULL_DATASET.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 3    
 
     full_dataset_from_csv = process_metric_utility.getDatasetFromCSV(dataset_file)
     full_rows, full_cols = np.shape(full_dataset_from_csv)
