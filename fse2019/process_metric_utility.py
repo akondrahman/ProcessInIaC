@@ -68,7 +68,7 @@ def createOutputDirectory(dirParam):
   if not os.path.exists(dirParam):
      os.makedirs(dirParam)
   if os.path.exists(dirParam):
-     print "Output directory created ..."
+     print "Output directory is there already ..."
 
 def getMercurialProgrammerList(file_with_rel_path, repo_path):
    prog_output = []

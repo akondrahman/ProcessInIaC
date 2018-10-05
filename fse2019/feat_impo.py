@@ -38,9 +38,12 @@ def getFeatureVector(feature_vec, label_vec):
     theRndForestModel.fit(feature_vec, label_vec)
     feat_imp_vector=theRndForestModel.feature_importances_
     feat_imp_vector=list(feat_imp_vector)
-    sorted_fea_imp = sorted(feat_imp_vector, reverse=True)
 
-    for feat_imp_val in sorted_fea_imp:
+    sorted_feat_imp_vector= [x_ for x_ in feat_imp_vector]
+    sorted_feat_imp_vector.sort(reverse=True)
+    print sorted_feat_imp_vector, feat_imp_vector
+
+    for feat_imp_val in sorted_feat_imp_vector:
         feat_index = feat_imp_vector.index(feat_imp_val) 
         list_.append(feat_index)
     return list_
