@@ -30,6 +30,21 @@ def dumpContentIntoFile(strP, fileP):
     fileToWrite.close()
     return str(os.stat(fileP).st_size)
 
+
+def getFeatureVector(feature_vec, label_vec):
+    list_ = []
+
+    theRndForestModel = RandomForestClassifier()
+    theRndForestModel.fit(feature_vec, label_vec)
+    feat_imp_vector=theRndForestModel.feature_importances_
+    feat_imp_vector=list(feat_imp_vector)
+    sorted_fea_imp = sorted(feat_imp_vector, reverse=True)
+
+    for feat_imp_val in sorted_fea_imp:
+        feat_index = feat_imp_vector.index(feat_imp_val) 
+        list_.append(feat_index)
+    return list_
+
 def calcFeatureImp(feature_vec, label_vec, feature_names_param, output_file, repeat=10):
     header_str, str2write= '', ''
     for name_ in feature_names_param:
