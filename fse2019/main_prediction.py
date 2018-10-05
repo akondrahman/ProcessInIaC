@@ -44,9 +44,17 @@ if __name__=='__main__':
     print "Started at:", process_metric_utility.giveTimeStamp()
     print "-"*50
 
-    dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V4_WIK_FULL_DATASET.csv'
-    pcasToExplore = 1
-    pcas2fit      = 1 
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_WIK_FULL_DATASET.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 3
+
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_OST_FULL_DATASET.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 5 
+
+    dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MOZ_FULL_DATASET.csv'
+    pcasToExplore = 5
+    pcas2fit      = 3    
 
     full_dataset_from_csv = process_metric_utility.getDatasetFromCSV(dataset_file)
     full_rows, full_cols = np.shape(full_dataset_from_csv)
