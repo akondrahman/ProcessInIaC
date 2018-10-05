@@ -70,8 +70,12 @@ def calcFeatureImp(feature_vec, label_vec, feature_names_param, output_file, rep
 
 
 if __name__=='__main__':
-   ds_file_name       = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_FULL_DATASET.csv'
-   output_file_param  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/FEAT_IMP_OUT_WIK.csv'
+
+   ds_file_name       = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_FULL_DATASET.csv'
+   output_file_param  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/FEAT_IMP_OUT_OST.csv'
+
+#    ds_file_name       = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_FULL_DATASET.csv'
+#    output_file_param  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/FEAT_IMP_OUT_WIK.csv'
 
    full_ds=readDataset(ds_file_name)
    full_rows, full_cols = np.shape(full_ds)

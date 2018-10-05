@@ -10,22 +10,14 @@ import process_metric_utility , numpy as np , pandas as pd, sklearn_utility
 import feat_impo
 
 
-def makeModel(all_features, all_labels):
-    feat_impo_list = feat_impo.getFeatureVector(all_features, all_labels)
-    #print feat_impo_list
-
-    for feat_index in feat_impo_list:
-        all_features = full_dataset_from_csv[:, feat_index:feat_index + 1]
-        
+def makeModel(all_features, all_labels, pca_comp, no_features_to_use):
+       
         log_transformed_features = process_metric_utility.createLogTransformedFeatures(all_features)
         feature_input_for_pca = log_transformed_features
 
-        # pca_comp = 9 ###  must be less than or equal to no of features
-        pca_comp = 1 ###  for size
+
         pcaObj = decomposition.PCA(n_components=pca_comp)
         pcaObj.fit(feature_input_for_pca)
-
-        variance_of_features = pcaObj.explained_variance_
 
         variance_ratio_of_features = pcaObj.explained_variance_ratio_
         print "Explained varaince ratio"
@@ -33,8 +25,6 @@ def makeModel(all_features, all_labels):
             print "Principal component#{}, explained variance:{}".format(index_+1, variance_ratio_of_features[index_])
         print "-"*50
 
-        # no_features_to_use = 6 #using one PCA you get lesser accuracy
-        no_features_to_use = 1 #using one PCA for size only
         print "Of all the features, we will use:", no_features_to_use
         print "-"*50
         pcaObj.n_components=no_features_to_use
@@ -48,15 +38,15 @@ def makeModel(all_features, all_labels):
         print 'Output directory created ...'
         sklearn_utility.performIterativeModeling(selected_features, all_labels, 10, 10, outputDir)
         print "-"*50
-        print feat_index
-        print '-'*50
 
 
 if __name__=='__main__':
     print "Started at:", process_metric_utility.giveTimeStamp()
     print "-"*50
 
-    dataset_file = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_FULL_DATASET.csv'
+    dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V4_WIK_FULL_DATASET.csv'
+    pcasToExplore = 1
+    pcas2fit      = 1 
 
     full_dataset_from_csv = process_metric_utility.getDatasetFromCSV(dataset_file)
     full_rows, full_cols = np.shape(full_dataset_from_csv)
@@ -74,7 +64,7 @@ if __name__=='__main__':
     defected_file_count     = len([x_ for x_ in all_labels if x_==1.0])
     non_defected_file_count = len([x_ for x_ in all_labels if x_==0.0])
 
-    makeModel(all_features, all_labels)
+    makeModel(all_features, all_labels, pcasToExplore, pcas2fit)
 
     print "The dataset was:", dataset_file
     print "-"*50
