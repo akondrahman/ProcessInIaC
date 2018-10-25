@@ -45,6 +45,26 @@ def getAllProcessMetricForAllFiles(pupp_map_dict_param, datasetFile2Save, org_na
    print "Dumped a file of {} bytes".format(dump_stats)
    return str2ret
 
+
+def getDefectCountForAllFiles(defect_categ_fil, datasetFile2Save, org_name, meenely_dict):
+   str2ret=''
+   fileCount = 0
+   defect_count_dict = process_metric_utility.getDefectCountDict(defect_categ_fil)
+   for file_, details_ in defect_count_dict.items():
+     if (file_!= 'WTF') and (file_ in meenely_dict):
+        fileCount = fileCount + 1
+        repo_              = details_[1]
+        defect_count       = details_[0]
+        print "Analyzing ... \nfile#{}\ndefect status:{}\nfile:{}\nrepo:{}".format(fileCount, defect_count, file_, repo_)
+        all_metric_for_this_file = getAllProcessMetricsForSingleFile(file_, repo_, org_name)
+        dev_met_, col_met_ = meenely_dict[file_]
+        all_metric_for_this_file = all_metric_for_this_file + str(dev_met_) + ',' + str(col_met_) + ','
+        str2ret = str2ret + all_metric_for_this_file + str(defect_count) + '\n'
+        print "="*75
+   dump_stats = process_metric_utility.createDataset(str2ret, datasetFile2Save)
+   print "Dumped a file of {} bytes".format(dump_stats)
+   return str2ret
+
 '''
 for dataset generation 
 '''
@@ -54,7 +74,6 @@ for dataset generation
 # theCompleteCategFile='/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Categ-Project/output/Mirantis_Categ_For_DB.csv'
 # init_dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/ICSE19_TSE/MIR_FUL_PRO.csv'
 # ORG = 'MIRANTIS'
-
 
 # theCompleteCategFile='/Users/akond/Documents/AkondOneDrive/OneDrive/IaC-Defect-Categ-Project/output/Mozilla.Final.Categ.csv'
 # init_dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/ICSE19_TSE/MOZ_FUL_PRO.csv'
@@ -70,11 +89,17 @@ for dataset generation
 
 
 ### OUTPUT
-
+# defect status dataset 
 # datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_FULL_DATASET.csv'
 # datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_FULL_DATASET.csv'
 # datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_FULL_DATASET.csv'
 # datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_FULL_DATASET.csv'
+
+# defect count  dataset 
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_DEFECT_COUNT_DATASET.csv'
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_DEFECT_COUNT_DATASET.csv'
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_DEFECT_COUNT_DATASET.csv'
+# datasetFile2Save='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_DEFECT_COUNT_DATASET.csv'
 
 
 
@@ -85,9 +110,14 @@ meenely_dict  = process_metric_utility.getMeenelyDetails(init_dataset_file)
 print "Loaded the defect mapping of files ... "
 print "-"*100
 
+# DEFECT STATUS 
+# str_ = getAllProcessMetricForAllFiles(fullPuppMap, datasetFile2Save, ORG, meenely_dict)
+# print "-"*100
 
-str_ = getAllProcessMetricForAllFiles(fullPuppMap, datasetFile2Save, ORG, meenely_dict)
+# DEFECT COUNT 
+str_ = getDefectCountForAllFiles(theCompleteCategFile, datasetFile2Save, ORG, meenely_dict)
 print "-"*100
+
 print "We analyzed {} Puppet files".format(len(fullPuppMap))
 print "-"*100
 print "Ended at:", process_metric_utility.giveTimeStamp()

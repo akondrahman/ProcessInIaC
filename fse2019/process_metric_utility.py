@@ -178,3 +178,24 @@ def getMeenelyDetails(meenely_file):
             dict_[path_of_file] = (dev_met_of_file, col_met_of_file)
     
     return dict_
+
+def getDefectCountDict(theCompleteCategFile):
+    dictOfAllFiles={}
+    dict2Ret={}
+    with open(theCompleteCategFile, 'rU') as file_:
+      reader_ = csv.reader(file_)
+      next(reader_, None)
+      for row_ in reader_:
+        repo_of_file       = row_[1]
+        categ_of_file      = row_[3]
+        full_path_of_file  = row_[4]
+        if full_path_of_file not in dictOfAllFiles:
+            dictOfAllFiles[full_path_of_file] = [[ categ_of_file ], repo_of_file]
+        else:
+            dictOfAllFiles[full_path_of_file][0] = dictOfAllFiles[full_path_of_file][0] + [ categ_of_file ]
+    for k_, v_ in dictOfAllFiles.items():
+       defect_status = v_[0]
+       defect_list = [x_ for x_ in defect_status if x_ !='N' ]
+       defect_cnt = len(defect_list)
+       dict2Ret[k_] = (defect_cnt, v_[1])
+    return dict2Ret  

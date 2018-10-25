@@ -11,7 +11,6 @@ import feat_impo
 
 
 def makeModel(all_features, all_labels, pca_comp, no_features_to_use):
-       
         log_transformed_features = process_metric_utility.createLogTransformedFeatures(all_features)
         feature_input_for_pca = log_transformed_features
 
@@ -45,20 +44,24 @@ if __name__=='__main__':
     print "-"*50
 
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_WIK_FULL_DATASET.csv'
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_CHI_DATASET.csv'
     # pcasToExplore = 5
-    # pcas2fit      = 3
+    # pcas2fit      = 3 # for CHI dataset 
 
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_OST_FULL_DATASET.csv'
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_CHI_DATASET.csv'    
     # pcasToExplore = 5
-    # pcas2fit      = 5 
+    # pcas2fit      = 4 # for CHI dataset 
 
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MOZ_FULL_DATASET.csv'
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_CHI_DATASET.csv'    
     # pcasToExplore = 5
-    # pcas2fit      = 3    
+    # pcas2fit      = 4 # for CHI dataset 
 
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MIR_FULL_DATASET.csv'
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_CHI_DATASET.csv'    
     # pcasToExplore = 5
-    # pcas2fit      = 3    
+    # pcas2fit      = 4    # for CHI dataset 
 
     full_dataset_from_csv = process_metric_utility.getDatasetFromCSV(dataset_file)
     full_rows, full_cols = np.shape(full_dataset_from_csv)
