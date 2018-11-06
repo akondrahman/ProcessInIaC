@@ -9,10 +9,10 @@ import numpy as np
 import cliffsDelta
 
 
-mirantis_file  ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_FULL_DATASET.csv"
-mozilla_file   ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_FULL_DATASET.csv"
-openstack_file ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_FULL_DATASET.csv"
-wikimedia_file ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_FULL_DATASET.csv"
+mirantis_file  ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/REDUCED_MIR_FULL_DATASET.csv"
+mozilla_file   ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/REDUCED_MOZ_FULL_DATASET.csv"
+openstack_file ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/REDUCED_OST_FULL_DATASET.csv"
+wikimedia_file ="/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/REDUCED_WIK_FULL_DATASET.csv"
 
 
 

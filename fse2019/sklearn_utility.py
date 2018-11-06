@@ -11,13 +11,14 @@ from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.metrics import precision_score, recall_score, f1_score
 import numpy as np, pandas as pd
 from sklearn.tree import DecisionTreeClassifier
-from sklearn import cross_validation, svm
+from sklearn.model_selection import cross_val_predict, cross_validate
 from sklearn.linear_model import RandomizedLogisticRegression, LogisticRegression
 from sklearn.metrics import classification_report, roc_auc_score, mean_absolute_error, accuracy_score, confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import linear_model
 import process_metric_utility
+from sklearn.svm import SVC
 
 
 
@@ -56,7 +57,7 @@ def evalClassifier(actualLabels, predictedLabels):
 
 def perform_cross_validation(classiferP, featuresP, labelsP, cross_vali_param, infoP):
 
-  predicted_labels = cross_validation.cross_val_predict(classiferP, featuresP , labelsP, cv=cross_vali_param)
+  predicted_labels = cross_val_predict(classiferP, featuresP , labelsP, cv=cross_vali_param)
   area_roc_to_ret = evalClassifier(labelsP, predicted_labels)
   return area_roc_to_ret
 
@@ -81,7 +82,7 @@ def performRF(featureParam, labelParam, foldParam, infoP):
   return rf_area_under_roc
 
 def performSVC(featureParam, labelParam, foldParam, infoP):
-  theSVMModel = svm.SVC(kernel='rbf').fit(featureParam, labelParam)
+  theSVMModel = SVC(kernel='rbf').fit(featureParam, labelParam)
   svc_area_under_roc = perform_cross_validation(theSVMModel, featureParam, labelParam, foldParam, infoP)
   print "For {}, area under ROC is: {}, f-measure is:{}".format(infoP, svc_area_under_roc[0], svc_area_under_roc[-1])
   return svc_area_under_roc

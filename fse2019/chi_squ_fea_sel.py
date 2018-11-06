@@ -30,6 +30,14 @@ if __name__=='__main__':
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/REDUCED_MOZ_FULL_DATASET.csv'
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/REDUCED_OST_FULL_DATASET.csv'
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/REDUCED_WIK_FULL_DATASET.csv'
+    # start_cols = 2
+
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_VDB.csv'
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_VDB.csv'
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_VDB.csv'
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_VDB.csv'
+    # start_cols =  1 
+
 
 
     full_dataset_from_csv = process_metric_utility.getDatasetFromCSV(dataset_file)
@@ -38,7 +46,7 @@ if __name__=='__main__':
 
     feature_cols = full_cols - 1  ## the last column is defect status, so one column to skip
 
-    all_features = full_dataset_from_csv[:, 2:feature_cols]
+    all_features = full_dataset_from_csv[:, start_cols:feature_cols]
 
     dataset_for_labels = process_metric_utility.getDatasetFromCSV(dataset_file)  ## unlike phase-1, the labels are '1' and '0', so need to take input as str
     label_cols = full_cols - 1 
@@ -48,7 +56,7 @@ if __name__=='__main__':
     defected_file_count     = len([x_ for x_ in all_labels if x_==1.0])
     non_defected_file_count = len([x_ for x_ in all_labels if x_==0.0])
 
-    feature_names = getColumnNames(dataset_file, 2, feature_cols)
+    feature_names = getColumnNames(dataset_file, start_cols, feature_cols)
 
     performChi(all_features, all_labels, feature_names )
 

@@ -43,25 +43,40 @@ if __name__=='__main__':
     print "Started at:", process_metric_utility.giveTimeStamp()
     print "-"*50
 
-    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_WIK_FULL_DATASET.csv'
-    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_CHI_DATASET.csv'
+    start_cols  = 2
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_CHI_DATASET.csv'    
     # pcasToExplore = 5
-    # pcas2fit      = 3 # for CHI dataset 
+    # pcas2fit      = 4    # for CHI dataset 
 
-    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_OST_FULL_DATASET.csv'
-    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_CHI_DATASET.csv'    
-    # pcasToExplore = 5
-    # pcas2fit      = 4 # for CHI dataset 
-
-    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MOZ_FULL_DATASET.csv'
     # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_CHI_DATASET.csv'    
     # pcasToExplore = 5
     # pcas2fit      = 4 # for CHI dataset 
 
-    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/V3_MIR_FULL_DATASET.csv'
-    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_CHI_DATASET.csv'    
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_CHI_DATASET.csv'    
     # pcasToExplore = 5
-    # pcas2fit      = 4    # for CHI dataset 
+    # pcas2fit      = 4 # for CHI dataset 
+
+    # dataset_file  = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_CHI_DATASET.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 3 # for CHI dataset 
+
+
+    # start_cols = 1
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MIR_VDB_CHI.csv'
+    # pcasToExplore = 4
+    # pcas2fit      = 3    # for VDB CHI dataset 
+
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/MOZ_VDB_CHI.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 4    # for VDB CHI dataset 
+
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/OST_VDB_CHI.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 5    # for VDB CHI dataset 
+
+    # dataset_file='/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/WIK_VDB_CHI.csv'
+    # pcasToExplore = 5
+    # pcas2fit      = 4    # for VDB CHI dataset 
 
     full_dataset_from_csv = process_metric_utility.getDatasetFromCSV(dataset_file)
     full_rows, full_cols = np.shape(full_dataset_from_csv)
@@ -69,7 +84,7 @@ if __name__=='__main__':
 
     feature_cols = full_cols - 1  ## the last column is defect status, so one column to skip
 
-    all_features = full_dataset_from_csv[:, 2:feature_cols]
+    all_features = full_dataset_from_csv[:, start_cols:feature_cols]
 
     dataset_for_labels = process_metric_utility.getDatasetFromCSV(dataset_file)  ## unlike phase-1, the labels are '1' and '0', so need to take input as str
     label_cols = full_cols - 1 
