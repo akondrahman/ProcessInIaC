@@ -73,7 +73,7 @@ def getUniqueDevCount(param_file_path, repo_path):
    theFile           = os.path.relpath(param_file_path, repo_path)
    #print "full path: {}, repo path:{}, theFile:{}".format(param_file_path, repo_path, theFile)
    commitCountCmd    = "hg churn --diffstat  " + theFile + " | awk '{print $1}'  "
-   command2Run = cdCommand + commitCountCmd
+   command2Run = cdCommand + commitCountCmd 
 
    commit_count_output = subprocess.check_output(['bash','-c', command2Run])
    author_count_output = commit_count_output.split('\n')
@@ -201,6 +201,44 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
 
 
 
+# useful for task/responsibility switching as well
+'''
+multi tasking : hg status --all | cut -d' ' -f2
+'''
+
+
+def getProgrammerMultiTasking(param_file_path, repo_path, dict_):
+   '''
+    first get all the programmers
+   '''
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   #print "full path: {}, repo path:{}, theFile:{}".format(param_file_path, repo_path, theFile)
+   commitCountCmd    = "hg churn --diffstat  " + theFile + " | awk '{print $1}'  "
+   command2Run = cdCommand + commitCountCmd
+
+   commit_count_output = subprocess.check_output(['bash','-c', command2Run])
+   progr_name_output   = commit_count_output.split('\n')
+   progr_name_output   = [x_ for x_ in progr_name_output if x_!='']
+   '''
+   then see how many programmers work on other files: Puppet and non-Puppet
+   '''
+   pp_mt_prog_list, non_pp_mt_prog_list = [], []
+   for progr_ in progr_name_output:
+       if progr_ in dict_:
+          all_files_worked         = dict_[progr_] # this is a list of files tocuhed by teh programmer
+          pp_files_worked          = [x_ for x_ in all_files_worked if '.pp' in x_]
+          non_pp_files_worked      = [x_ for x_ in all_files_worked if '.pp' not in x_]
+          uni_pp_files_worked      = np.unique(pp_files_worked)
+          uni_non_pp_files_worked  = np.unique(non_pp_files_worked)
+          # if each programmer worked on more puppet files, then the programmer is multi tasking for Puppet files
+          # if each programmer worked on more non puppet files, then the programmer is multi tasking for non-Puppet files
+          if (len(uni_pp_files_worked) > 1):
+              pp_mt_prog_list.append(progr_)
+          if (len(uni_non_pp_files_worked) > 1):
+              non_pp_mt_prog_list.append(progr_)
+   #print pp_mt_prog_list, non_pp_mt_prog_list
+   return len(np.unique(pp_mt_prog_list)), len(np.unique(non_pp_mt_prog_list))
 
 def getHighestContribsPerc(param_file_path, repo_path, sloc):
    cdCommand         = "cd " + repo_path + " ; "
@@ -218,7 +256,11 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    else:
        highest_contr    = 0
    #print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
-   return (round(float(highest_contr)/float(sloc), 5))*100
+   if(sloc > 0):
+       val2ret = (round(float(highest_contr)/float(sloc), 5))*100
+   else:
+       val2ret = 0
+   return val2ret
 
 def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
    '''
@@ -252,10 +294,13 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
    #print "list:{} ...\n prob->entropy:{}".format(lineNoProb, scatterness_prob)
    #print "list:{} ...\n count->entropy:{} ...sloc:{}".format(lineNoCnt, scatterness_cnt, sloc)
    #return scatterness_prob, scatterness_cnt
+   #Added on Sep 24, 2017
+   if((scatterness_cnt==float('inf')) or (scatterness_cnt==float('-inf'))):
+     scatterness_cnt = float(0)
    return scatterness_cnt
 
 
-def getProcessMetrics(file_path_p, repo_path_p):
+def getProcessMetrics(file_path_p, repo_path_p, prog_to_file_dict):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
     #get AGE
@@ -309,8 +354,29 @@ def getProcessMetrics(file_path_p, repo_path_p):
     ### GET Scatterness of a file
     SCTR         = getDeveloperScatternessOfFile(file_path_p, repo_path_p, LOC)
     ### GET total lines of code changed per SLOC
-    TOTCHNGPERLOC = round(float(TOT_LOC_CHNG)/float(LOC), 5)
+    if (LOC > 0):
+       TOTCHNGPERLOC  = round(float(TOT_LOC_CHNG)/float(LOC), 5)
+    else:
+        TOTCHNGPERLOC = float(0)
+    '''
+    added aug 06, 2017: three more metrics:
+    1. programmers who work on other files
+    2. programmers who work on other Puppet files
+    3. size of commits
+    '''
 
+    #size of commits
+    if COMM > 0:
+        COMM_SIZE = round(float(TOT_LOC_CHNG)/float(COMM), 5)
+    else:
+        COMM_SIZE = float(0)
+
+    #get programmer multi tasking within Puppet and non Puppet files
+    prog_mt_pp_count, prog_mt_non_pp_count= getProgrammerMultiTasking(file_path_p, repo_path_p, prog_to_file_dict)
+    if (DEV > 0):
+       prog_mt_pp_perc,  prog_mt_non_pp_perc = round(float(prog_mt_pp_count)/float(DEV), 5), round(float(prog_mt_non_pp_count)/float(DEV), 5)
+    else:
+       prog_mt_pp_perc,  prog_mt_non_pp_perc = 0, 0
     ## all process metrics
     #all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(ADDPERLOC) + ','
@@ -318,4 +384,7 @@ def getProcessMetrics(file_path_p, repo_path_p):
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(SUMCHNG) + ',' + str(TOTCHNGPERLOC) + ','
     # all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
     all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','  + str(SCTR) + ','
+    #all_process_metrics = all_process_metrics + str(COMM_SIZE) + ',' + str(prog_mt_pp_perc) + ',' + str(prog_mt_non_pp_perc) + ','
+    all_process_metrics = all_process_metrics + str(prog_mt_pp_perc) + ',' + str(prog_mt_non_pp_perc) + ','
+
     return all_process_metrics

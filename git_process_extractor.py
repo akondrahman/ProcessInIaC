@@ -12,8 +12,6 @@ monthDict            = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'0
                          'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
 
 
-
-
 def getCommitCount(param_file_path, repo_path):
    totalCountForChurn = 0
 
@@ -79,6 +77,41 @@ def getUniqueDevCount(param_file_path, repo_path):
    #print author_count
    return author_count
 
+def getProgrammerMultiTasking(param_file_path, repo_path, dict_):
+   '''
+    first get all the programmers
+   '''
+   cdCommand         = "cd " + repo_path + " ; "
+   theFile           = os.path.relpath(param_file_path, repo_path)
+   #print "full path: {}, repo path:{}, theFile:{}".format(param_file_path, repo_path, theFile)
+   commitCountCmd    = " git blame "+ theFile +"  | awk '{print $2}' | cut -d'(' -f2 "
+   command2Run = cdCommand + commitCountCmd
+
+   commit_count_output = subprocess.check_output(['bash','-c', command2Run])
+   progr_name_output   = commit_count_output.split('\n')
+   progr_name_output   = [x_ for x_ in progr_name_output if x_!='']
+   '''
+   then see how many programmers work on other files: Puppet and non-Puppet
+   '''
+   pp_mt_prog_list, non_pp_mt_prog_list = [], []
+   for progr_ in progr_name_output:
+       if progr_ in dict_:
+          all_files_worked         = dict_[progr_] # this is a list of files tocuhed by teh programmer
+          pp_files_worked          = [x_ for x_ in all_files_worked if '.pp' in x_]
+          non_pp_files_worked      = [x_ for x_ in all_files_worked if '.pp' not in x_]
+          uni_pp_files_worked      = np.unique(pp_files_worked)
+          uni_non_pp_files_worked  = np.unique(non_pp_files_worked)
+          # if each programmer worked on more puppet files, then the programmer is multi tasking for Puppet files
+          # if each programmer worked on more non puppet files, then the programmer is multi tasking for non-Puppet files
+          if (len(uni_pp_files_worked) > 1):
+              pp_mt_prog_list.append(progr_)
+          if (len(uni_non_pp_files_worked) > 1):
+              non_pp_mt_prog_list.append(progr_)
+   #print pp_mt_prog_list, non_pp_mt_prog_list
+   return len(np.unique(pp_mt_prog_list)), len(np.unique(non_pp_mt_prog_list))
+
+
+
 def getAvgConsecutiveTimeDiff(month_year_list_param):
     counter = 0
     consecList = []
@@ -98,8 +131,8 @@ def getAverageTimeBetweenEdits(param_file_path, repo_path):
 
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
-   commitCommand        = "git log  --format=%cd " + theFile + " | awk '{ print $2 $3 $5}' | sed -e 's/ /,/g'"
-   command2Run          = cdCommand + commitCommand
+   commitCommand     = "git log  --format=%cd " + theFile + " | awk '{ print $2 $3 $5}' | sed -e 's/ /,/g'"
+   command2Run       = cdCommand + commitCommand
 
    dt_churn_output = subprocess.check_output(['bash','-c', command2Run])
    dt_churn_output = dt_churn_output.split('\n')
@@ -127,7 +160,8 @@ def getAddedChurnMetrics(param_file_path, repo_path):
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
    add_churn_output = add_churn_output.split('\n')
    add_churn_output = [x_ for x_ in add_churn_output if x_!='']
-   add_churn_output = [int(y_) for y_ in add_churn_output ]
+   #print add_churn_output
+   add_churn_output = [int(y_) for y_ in add_churn_output if y_.isdigit()]
    #print add_churn_output
    totalAddedLinesForChurn = sum(add_churn_output)
    #print totalAddedLinesForChurn
@@ -147,7 +181,7 @@ def getDeletedChurnMetrics(param_file_path, repo_path):
    del_churn_output = subprocess.check_output(['bash','-c', command2Run])
    del_churn_output = del_churn_output.split('\n')
    del_churn_output = [x_ for x_ in del_churn_output if x_!='']
-   del_churn_output = [int(y_) for y_ in del_churn_output]
+   del_churn_output = [int(y_) for y_ in del_churn_output if y_.isdigit()]
    #print del_churn_output
    totalDeletedLinesForChurn = sum(del_churn_output)
    #print totalDeletedLinesForChurn
@@ -165,7 +199,7 @@ def getAverageAndTotalChangedLines(param_file_path, repo_path):
    del_churn_output = subprocess.check_output(['bash','-c', command2Run])
    del_churn_output = del_churn_output.split('\n')
    del_churn_output = [x_ for x_ in del_churn_output if x_!='']
-   del_churn_output = [int(y_) for y_ in del_churn_output]
+   del_churn_output = [int(y_) for y_ in del_churn_output if y_.isdigit()]
 
    cdCommand         = "cd " + repo_path + " ; "
    theFile           = os.path.relpath(param_file_path, repo_path)
@@ -175,7 +209,7 @@ def getAverageAndTotalChangedLines(param_file_path, repo_path):
    add_churn_output = subprocess.check_output(['bash','-c', command2Run])
    add_churn_output = add_churn_output.split('\n')
    add_churn_output = [x_ for x_ in add_churn_output if x_!='']
-   add_churn_output = [int(y_) for y_ in add_churn_output ]
+   add_churn_output = [int(y_) for y_ in add_churn_output if y_.isdigit()]
 
    chanegHolder     = add_churn_output + del_churn_output
    #print chanegHolder
@@ -202,7 +236,7 @@ def getMinorContribCount(param_file_path, repo_path, sloc):
    return len(minorList)
 
 
-
+# useful for task/responsibility switching as well
 
 def getHighestContribsPerc(param_file_path, repo_path, sloc):
    cdCommand         = "cd " + repo_path + " ; "
@@ -214,9 +248,15 @@ def getHighestContribsPerc(param_file_path, repo_path, sloc):
    blame_output     = blame_output.split('\n')
    blame_output     = [x_ for x_ in blame_output if x_!='']
    author_contrib   = dict(Counter(blame_output))
-   highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
-   highest_contr    = author_contrib[highest_author]
-   #print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
+   #print author_contrib
+   if (len(author_contrib) > 0):
+     highest_author   = max(author_contrib.iteritems(), key=operator.itemgetter(1))[0]
+     highest_contr    = author_contrib[highest_author]
+     #print "LOC:{}, A:{}, C:{}, dict:{}".format(sloc, highest_author, highest_contr, author_contrib)
+   else:
+     highest_contr = 0
+   if sloc <= 0 :
+       sloc += 1
    return (round(float(highest_contr)/float(sloc), 5))*100
 
 def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
@@ -259,7 +299,10 @@ def getDeveloperScatternessOfFile(param_file_path, repo_path, sloc):
    #print "list:{} ...\n count->entropy:{} ...sloc:{}".format(lineNoCnt, scatterness_cnt, sloc)
    #return scatterness_prob, scatterness_cnt
    return scatterness_cnt
-def getProcessMetrics(file_path_p, repo_path_p):
+
+
+
+def getProcessMetrics(file_path_p, repo_path_p, prog_to_file_dict):
     #get commit count
     COMM = getCommitCount(file_path_p, repo_path_p)
     #get age
@@ -314,6 +357,27 @@ def getProcessMetrics(file_path_p, repo_path_p):
       TOTCHNGPERLOC = round(float(TOT_LOC_CHNG)/float(LOC), 5)
     else:
         TOTCHNGPERLOC = float(0)
+
+    '''
+    added aug 06, 2017: three more metrics:
+    1. programmers who work on other files
+    2. programmers who work on other Puppet files
+    3. size of commits
+    '''
+
+    #size of commits
+    if COMM > 0:
+        COMM_SIZE = round(float(TOT_LOC_CHNG)/float(COMM), 5)
+    else:
+        COMM_SIZE = float(0)
+
+    #get programmer multi tasking within Puppet and non Puppet files
+    prog_mt_pp_count, prog_mt_non_pp_count= getProgrammerMultiTasking(file_path_p, repo_path_p, prog_to_file_dict)
+    if (DEV > 0):
+       prog_mt_pp_perc,  prog_mt_non_pp_perc = round(float(prog_mt_pp_count)/float(DEV), 5), round(float(prog_mt_non_pp_count)/float(DEV), 5)
+    else:
+       prog_mt_pp_perc,  prog_mt_non_pp_perc = 0, 0
+
     ## all process metrics
     #all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(AVGTIMEOFEDITS) + ',' + str(ADDPERLOC) + ','
     all_process_metrics = str(COMM) + ',' + str(AGE) + ',' + str(DEV) + ',' + str(ADDPERLOC) + ','
@@ -321,4 +385,8 @@ def getProcessMetrics(file_path_p, repo_path_p):
     all_process_metrics = all_process_metrics +  str(DELPERLOC) + ',' + str(SUMCHNG) + ',' + str(TOTCHNGPERLOC) + ','
     # all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ',' + str(OWN) + ',' + str(SCTR) + ','
     all_process_metrics = all_process_metrics + str(AVGCHNG) + ',' + str(MINOR) + ','  + str(SCTR) + ','
+
+    #all_process_metrics = all_process_metrics + str(COMM_SIZE) + ',' + str(prog_mt_pp_perc) + ',' + str(prog_mt_non_pp_perc) + ','
+
+    all_process_metrics = all_process_metrics + str(prog_mt_pp_perc) + ',' + str(prog_mt_non_pp_perc) + ','
     return all_process_metrics
