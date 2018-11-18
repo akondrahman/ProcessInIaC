@@ -12,11 +12,66 @@ from subprocess import call
 def printDT(x_train, y_train, col_names, png_file_name):
   
   theCARTModel = tree.DecisionTreeClassifier(criterion='gini', max_depth=4, max_leaf_nodes=None, min_samples_leaf=1)
-#   theCARTModel = tree.DecisionTreeClassifier(criterion='entropy', max_depth=4, max_leaf_nodes=None, min_samples_leaf=1)
+  #theCARTModel = tree.DecisionTreeClassifier(criterion='entropy', max_depth=4, max_leaf_nodes=None, min_samples_leaf=1)
   theCARTModel.fit(x_train, y_train)
   #print dir(theCARTModel.tree_)
   tree.export_graphviz(theCARTModel, out_file='tree.dot', feature_names=col_names)
   call(['dot', '-T', 'png', 'tree.dot', '-o', png_file_name])
+
+
+def get_code(tree, feature_names, target_names, spacer_base="    "):
+    """Produce psuedo-code for decision tree.
+
+    Args
+    ----
+    tree -- scikit-leant DescisionTree.
+    feature_names -- list of feature names.
+    target_names -- list of target (class) names.
+    spacer_base -- used for spacing code (default: "    ").
+
+    Notes
+    -----
+    based on http://stackoverflow.com/a/30104792.
+    """
+    left      = tree.tree_.children_left
+    right     = tree.tree_.children_right
+    threshold = tree.tree_.threshold
+    features  = [feature_names[i] for i in tree.tree_.feature]
+    value = tree.tree_.value
+
+    def recurse(left, right, threshold, features, node, depth):
+        spacer = spacer_base * depth
+        if (threshold[node] != -2):
+            print(spacer + "if ( " + features[node] + " <= " + \
+                  str(threshold[node]) + " ) {")
+            if left[node] != -1:
+                    recurse(left, right, threshold, features,
+                            left[node], depth+1)
+            print(spacer + "}\n" + spacer +"else {")
+            if right[node] != -1:
+                    recurse(left, right, threshold, features,
+                            right[node], depth+1)
+            print(spacer + "}")
+        else:
+            target = value[node]
+            for i, v in zip(np.nonzero(target)[1],
+                            target[np.nonzero(target)]):
+                target_name = target_names[i]
+                target_count = int(v)
+                print(spacer + "return " + str(target_name) + \
+                      " ( " + str(target_count) + " examples )")
+
+    recurse(left, right, threshold, features, 0, 0)
+
+
+def printRules(x_train, y_train, col_names, png_file_name):
+  
+  theCARTModel = tree.DecisionTreeClassifier(criterion='gini', max_depth=4, max_leaf_nodes=None, min_samples_leaf=1)
+  #theCARTModel = tree.DecisionTreeClassifier(criterion='entropy', max_depth=4, max_leaf_nodes=None, min_samples_leaf=1)
+  theCARTModel.fit(x_train, y_train)
+  get_code(theCARTModel, col_names, ['Non-defective', 'Defective'])
+
+
 
 
 def calcFeatureImp(feature_vec, label_vec, feature_names_param, repeat=10):
@@ -67,5 +122,7 @@ if __name__=='__main__':
    
     # printDT(all_features, all_labels, features, png_file_)
 
-    calcFeatureImp(all_features, all_labels, features)
+    # calcFeatureImp(all_features, all_labels, features)
+
+    printRules(all_features, all_labels, features)
     print 'The dataset was:', dataset_file
