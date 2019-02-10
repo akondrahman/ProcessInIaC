@@ -38,19 +38,19 @@ def showMetricDist(the_fil, metric_name, ds_name):
 
 def dumpCount(the_fil, metric_name, output_file,  ds_name):
     strToWrite = ''
-    
-
     the_df_ = pd.read_csv(the_fil)
+
     defect_df = the_df_[the_df_['defect_status']==1]
+    defect_metric_vals = defect_df[metric_name].tolist()
 
-    metric_vals = defect_df[metric_name].tolist()
-    if metric_name == 'OWNER_LINES':
-       metric_vals = [round(x_, 1) for x_ in metric_vals]
+    non_defect_df = the_df_[the_df_['defect_status']==0]
+    non_defect_metric_vals = non_defect_df[metric_name].tolist()
 
-    tot_cnt = len(metric_vals)
-    
-    for x_ in metric_vals: 
-        strToWrite = strToWrite + ds_name + ',' + str(x_) + ',' + '\n'
+    for x_ in defect_metric_vals: 
+        strToWrite = strToWrite + ds_name + ',' + str(x_) + ',' + 'Defective' + ',' + '\n'
+
+    for y_ in non_defect_metric_vals: 
+        strToWrite = strToWrite + ds_name + ',' + str(y_) + ',' + 'Neutral' + ',' + '\n'
 
     file_name = output_file.split('/')[-1] 
     dumpContentIntoFile(strToWrite, '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/' + file_name + '_' + metric_name + '.csv')
@@ -85,5 +85,5 @@ if __name__=='__main__':
     # the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_OST_FULL_DATASET.csv'
     # dumpCount(the_fil, 'DEVS', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/OSTK_DEVS_RAW_CNT.csv', 'OST')    
 
-    # the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_WIK_FULL_DATASET.csv'
-    # dumpCount(the_fil, 'DEVS', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/WIK_DEVS_RAW_CNT.csv', 'WIK')    
+    the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_WIK_FULL_DATASET.csv'
+    dumpCount(the_fil, 'DEVS', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/WIK_DEVS_RAW_CNT.csv', 'WIK')    
