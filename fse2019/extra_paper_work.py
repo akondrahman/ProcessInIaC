@@ -77,13 +77,13 @@ if __name__=='__main__':
     '''
 
     # the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_MIR_FULL_DATASET.csv'
-    # dumpCount(the_fil, 'DEVS', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/MIRA_DEVS_RAW_CNT.csv', 'MIR')    
+    # dumpCount(the_fil, 'OWNER_LINES', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/MIRA_OWNER_LINES_RAW_CNT.csv', 'MIR')    
 
     # the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_MOZ_FULL_DATASET.csv'
-    # dumpCount(the_fil, 'DEVS', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/MOZ_DEVS_RAW_CNT.csv', 'MOZ')    
+    # dumpCount(the_fil, 'OWNER_LINES', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/MOZ_OWNER_LINES_RAW_CNT.csv', 'MOZ')    
 
     # the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_OST_FULL_DATASET.csv'
-    # dumpCount(the_fil, 'DEVS', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/OSTK_DEVS_RAW_CNT.csv', 'OST')    
+    # dumpCount(the_fil, 'OWNER_LINES', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/OSTK_OWNER_LINES_RAW_CNT.csv', 'OST')    
 
-    the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_WIK_FULL_DATASET.csv'
-    dumpCount(the_fil, 'DEVS', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/WIK_DEVS_RAW_CNT.csv', 'WIK')    
+    # the_fil = '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/dataset/FSE2019/FIGSHARE/REDUCED_WIK_FULL_DATASET.csv'
+    # dumpCount(the_fil, 'OWNER_LINES', '/Users/akond/Documents/AkondOneDrive/OneDrive/ProcessInIaC/output/FSE2019/WIK_OWNER_LINES_RAW_CNT.csv', 'WIK')    
